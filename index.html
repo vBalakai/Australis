@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Australis</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" tabindex="0" aria-label="Walkable 3D diorama. Use the arrow keys or WASD to walk and Space to talk."></canvas>
+  <div class="tilt top" aria-hidden="true"></div>
+  <div class="tilt bot" aria-hidden="true"></div>
+  <div class="top">
+    <div class="plate drop" id="plate"><span class="eyebrow" id="plateSub">Darling Downs · Start town</span><strong id="plateName">Wattle Town</strong></div>
+    <div class="dock" role="toolbar" aria-label="View settings">
+      <div class="seg" role="group" aria-label="Time of day">
+        <button type="button" id="t-day" data-t="day" aria-pressed="true">Day</button>
+        <button type="button" id="t-gold" data-t="gold" aria-pressed="false">Golden hour</button>
+        <button type="button" id="t-night" data-t="night" aria-pressed="false">Night</button>
+      </div>
+      <button type="button" id="tilt" class="tbtn" aria-pressed="true">Tilt-shift</button>
+    </div>
+  </div>
+  <div class="dialog" id="dialog" hidden><p id="dtext" aria-hidden="true"></p><span class="more" id="dmore" aria-hidden="true"></span></div>
+  <p class="sr" id="live" aria-live="polite"></p>
+  <div class="controls">
+    <div class="dpad" role="group" aria-label="Walk">
+      <button type="button" class="u" id="pad-up" data-d="up" aria-label="Walk up"><svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M8 0 16 12H0z" fill="currentColor"/></svg></button>
+      <button type="button" class="l" id="pad-left" data-d="left" aria-label="Walk left"><svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M0 8 12 0v16z" fill="currentColor"/></svg></button>
+      <button type="button" class="r" id="pad-right" data-d="right" aria-label="Walk right"><svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M12 8 0 16V0z" fill="currentColor"/></svg></button>
+      <button type="button" class="d" id="pad-down" data-d="down" aria-label="Walk down"><svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M8 12 0 0h16z" fill="currentColor"/></svg></button>
+    </div>
+    <p class="keys">Arrows or WASD to walk · Space to talk</p>
+    <button type="button" class="abtn" id="btnA" aria-label="Talk or interact">A</button>
+  </div>
+  <div id="fade" aria-hidden="true"><div class="card"><strong id="cardName">Route 1</strong><span id="cardSub">Downs farm roads</span></div></div>
+  <div id="flash" aria-hidden="true"></div>
+  <div id="err" hidden><p>Loading the diorama…</p></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/textures.js"></script>
+<script src="js/builders.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/world.js"></script>
+<script src="js/towns/wattle-town.js"></script>
+<script src="js/towns/bloomridge.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
