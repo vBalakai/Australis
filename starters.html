@@ -43,7 +43,7 @@ footer{margin-top:40px;color:var(--muted);font-size:14px}
 <main>
   <header>
     <h1>Australis starters</h1>
-    <p>Three partners for the journey, each with a three-stage line and a Gen 4-style second type in its final form. Every model is built from simple low-poly shapes in code, the same as the trainers in the game. <a href="battle.html">See the polished battle models</a> or <a href="index.html">play the game</a>.</p>
+    <p>Three partners for the journey, each with a three-stage line and a Gen 4-style second type in its final form. These are the overworld models that follow you around the map; each one has a detailed battle model built from the same design. <a href="battle.html">See the polished battle models</a> or <a href="index.html">play the game</a>.</p>
   </header>
   <div id="lines"></div>
   <footer>Type triangle: Grass beats Water, Water beats Fire, Fire beats Grass. Your rival always picks the starter that beats yours. Your partner evolves after the Reef Badge.</footer>
@@ -53,13 +53,14 @@ footer{margin-top:40px;color:var(--muted);font-size:14px}
 <script src="js/textures.js"></script>
 <script src="js/builders.js"></script>
 <script src="js/characters.js"></script>
+<script src="js/mon-designs.js"></script>
 <script src="js/starters.js"></script>
 <script>
 /* gallery: one fixed canvas, each card's viewport drawn with a scissor so the page stays responsive */
 const LINES=[
-  {title:'Gumjo line',sub:'Koala · Grass, then Grass/Ground. Ability: Gum Bellow, a sound attack that can make foes flinch.',forms:['gumjo','bellowala','koalossus']},
-  {title:'Kindrill line',sub:'Frilled lizard · Fire, then Fire/Electric. Ability: Frill Flare, lowers the foe\'s Attack on entry.',forms:['kindrill','frillblaze','pyragon']},
-  {title:'Puggly line',sub:'Platypus · Water, then Water/Poison. Ability: Electrosense, its moves never miss.',forms:['puggly','spurbill','platyrant']}];
+  {title:'Gumjo line',sub:'Koala · Grass, then Grass/Ground · Role: tank. Ability: Gum Bellow, a sound attack that can make foes flinch.',forms:['gumjo','bellowala','koalossus']},
+  {title:'Kindrill line',sub:'Frilled dinosaur · Fire, then Fire/Electric · Role: all-rounder. Ability: Frill Flare, lowers the foe\'s Attack on entry.',forms:['kindrill','frillblaze','pyragon']},
+  {title:'Puggly line',sub:'Platypus · Water, then Water/Poison · Role: special sniper. Ability: Electrosense, its moves never miss.',forms:['puggly','spurbill','platyrant']}];
 const tcls={Grass:'grass',Fire:'fire',Water:'water',Electric:'elec',Ground:'ground',Poison:'poison'};
 const host=document.getElementById('lines'),views=[];
 LINES.forEach(l=>{
