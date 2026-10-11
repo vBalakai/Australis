@@ -1,4 +1,5 @@
 /* Australis: Wattle Town, the start town on the Darling Downs */
+CHAR.aide={skin:'#c88a5a',hair:'#2a2a30',top:'#5ac0b0',coat:'#eef0f2',bottom:'#3a4a6a',shoes:'#2a2a30',glasses:true};
 /* ================= Wattle Town ================= */
 const WT=newLoc('wattle',{name:'Wattle Town',sub:'Darling Downs · Start town',yaw:0,grid:Grid(32,24,-16,-12),wild:{day:['Warblet','Burrowlet','Warblet','Burrowlet'],night:['Possnack','Burrowlet','Possnack'],field:'wheat'}});
 (function(L){
@@ -90,19 +91,20 @@ const WT=newLoc('wattle',{name:'Wattle Town',sub:'Darling Downs · Start town',y
   L.talk.set('14,6',['The golden wattle the town is named after.','Fluffy yellow blossoms drift down around you.']);
   L.talk.set('14,8',['You sit on the bench for a moment. Bees hum in the wattle above.']);
   L.talk.set('13,9',['A street lamp. Moths love it at night.']);
-  L.talk.set('7,17',['Professor\'s Lab.','The sliding doors are shut. The Professor is waiting outside.']);
+  door(L,7,17,{to:'lab',spawn:{tx:6,ty:9,face:[0,-1]}});
   talkRect(L,3,17,6,17,['Through the window: shelves of field notes and specimen jars.']);talkRect(L,8,17,11,17,['Through the window: shelves of field notes and specimen jars.']);
   talkRect(L,12,14,13,15,['Round hay bales. They smell like summer.']);
   talkRect(L,12,16,13,18,['The Professor\'s ute. The tray is full of field-research gear.']);
   L.talk.set('22,17',['A scarecrow in a farmer\'s shirt. The Warblet don\'t seem scared of it at all.']);
   L.talk.set('3,9',['A young wattle, buzzing with bees.']);L.talk.set('11,9',['A young wattle, buzzing with bees.']);
   for(let y=2;y<=21;y++)if(y<11||y>12){const c=['The creek runs clear and cold. It\'s too deep to wade across.'];L.talk.set('28,'+y,c);L.talk.set('29,'+y,c);}
-  npc(L,()=>human(CHAR.rival),22,9,['Took you long enough!','I\'m picking the strongest starter. Just watch me.']);
-  npc(L,()=>human(CHAR.prof),9,18,['Ah, there you are!','Australis is full of Pokémon you won\'t find anywhere else.','Choose your partner: Gumjo, Kindrill or Puggly. Then head east through the wheat country to Bloomridge.']);
-  npc(L,gumjo,6,18,['Gumjo: "Gum-gum!"','It\'s clinging to its eucalyptus leaf and won\'t let go.'],{hop:true});
+  const rv=npc(L,()=>human(CHAR.rival),22,9,null);
+  rv.lines=()=>STATE.starter?['Bet my '+FORMS[RIVAL_PICK[STATE.starter]].name+' is stronger than your '+FORMS[STATE.starter].name+'!','Race you to Riverbend!']:['Took you long enough!','The Professor\'s waiting in the lab. I\'m picking the strongest starter. Just watch me.'];
+  const aide=npc(L,()=>human(CHAR.aide),9,18,null);
+  aide.lines=()=>STATE.starter?['The Professor told me all about your '+partnerName()+'. Good choice!','Head east past the creek to reach Route 1.']:['Morning! The Professor is waiting for you inside the lab.','Three Pokémon are ready to meet you. Walk in through the sliding doors.'];
   npc(L,warblet,18,13,['Warblet: "Warble-warble!"','It hops along the fence, singing at you.'],{hop:true});
   L.spawn={tx:7,ty:8,face:[0,1]};
-  L.exit=(tx,ty,dx,dy)=>(tx>=31&&dx===1)?{to:'bloom',spawn:{tx:1,ty:ty===11?7:8,face:[1,0]},card:['Route 1','Downs farm roads']}:null;
+  L.exit=(tx,ty,dx,dy)=>(tx>=31&&dx===1)?(!STATE.starter?{say:['The Professor\'s voice calls out: "Wait! It\'s not safe to go into the tall grass without a Pokémon!"','"Come to the lab and choose your partner first."']}:{to:'bloom',spawn:{tx:1,ty:ty===11?7:8,face:[1,0]},card:['Route 1','Downs farm roads']}):null;
   scatterTufts(L,170,T.tuft,.18);
   L.update=t=>{wN.offset.y=-t*.18;wS.offset.y=-t*.22;wF.offset.y=t*1.1;fan.rotation.z=-t*2.4;for(let i=0;i<wheat.length;i++){const s=wheat[i];s.position.x=s.userData.x+Math.round(Math.sin(t*1.5+s.userData.z*1.3+s.userData.x*.4)*1.2)/16;}};
 })(WT);

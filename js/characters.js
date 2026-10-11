@@ -53,17 +53,6 @@ function warblet(){
   [-.06,.06].forEach(x=>pt(G.cyl(.015,.015,.1,4),'#e0c040',x,.05,0,root));
   return {group,root};
 }
-function gumjo(){
-  const group=new THREE.Group(),root=new THREE.Group();group.add(root);
-  pt(G.ball(.2),'#9aa0b0',0,.2,0,root,1,1,.9);pt(G.ball(.13),'#d8dce4',0,.2,.1,root);
-  pt(G.ball(.23),'#9aa0b0',0,.5,0,root);
-  [-.2,.2].forEach(x=>{pt(G.ball(.11),'#9aa0b0',x,.66,-.02,root);pt(G.ball(.065),'#e8eaf0',x,.66,.06,root);});
-  pt(G.box(.1,.12,.06),'#3a3a44',0,.46,.22,root);
-  [-.1,.1].forEach(x=>pt(G.box(.04,.06,.02),'#2a2030',x,.55,.21,root));
-  const leaf=pt(G.ball(.14,0),'#5aa848',0,.3,.22,root,.55,1.3,.2);leaf.rotation.z=.35;
-  [-.12,.12].forEach(x=>pt(G.ball(.06,0),'#9aa0b0',x,.32,.17,root));
-  return {group,root};
-}
 function sugrette(){
   const group=new THREE.Group(),root=new THREE.Group();group.add(root);
   pt(G.ball(.14),'#b8bcc8',0,.16,0,root,1,.85,1.25);pt(G.ball(.1),'#f4f0f4',0,.14,.07,root);

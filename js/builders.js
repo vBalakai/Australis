@@ -7,7 +7,10 @@ function groundBox(x0,x1,z0,z1,y0,y1,top,side){
   const mats=[sideMat(st,d,h,topAlign),sideMat(st,d,h,topAlign),M({map:rep(top,w,d)}),M({color:'#4a3220'}),sideMat(st,w,h,topAlign),sideMat(st,w,h,topAlign)];
   const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mats);m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);m.receiveShadow=true;add(m);return m;
 }
+/* each slab sits a hair higher than the last, so overlapping paths never share a plane and flicker */
+let SLABN=0;
 function slab(x0,x1,z0,z1,y,h,top,side){
+  h+=(SLABN++%6)*.0016;
   const w=x1-x0,d=z1-z0,sm=M({color:side||'#c9ae7c'});
   const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),[sm,sm,M({map:rep(top,w,d)}),sm,sm,sm]);
   m.position.set((x0+x1)/2,y+h/2,(z0+z1)/2);m.receiveShadow=true;m.castShadow=h>.1;add(m);return m;
@@ -25,10 +28,11 @@ function blob(x,y,z,r,parent){const b=new THREE.Mesh(blobGeo,blobMat);b.rotation
 function spr(tex,x,y,z,sx,sy,shadow,cast){const s=new THREE.Mesh(planeGeo,smat(tex));s.position.set(x,y,z);s.scale.set(sx,sy*BB_Y,1);add(s);billboards.push(s);if(cast){s.castShadow=true;s.customDepthMaterial=depthFor(tex);}if(shadow)s.userData.blob=blob(x,y,z,shadow);return s;}
 const railMat=M({color:'#6a4020'}),metal=M({color:'#9aa2ac',flatShading:true}),lightMetal=M({color:'#e4e8ec',flatShading:true});
 const rockMat=M({color:'#a49a8a',flatShading:true});
-const glowMat=new THREE.MeshBasicMaterial({color:'#ffd27a',transparent:true,opacity:.92});
-const glows=[],lamps=[],lampMats=[];
-function glowAt(x,y,z,w,h){const g=new THREE.Mesh(new THREE.PlaneGeometry(w,h),glowMat);g.position.set(x,y,z);g.visible=false;add(g);glows.push(g);}
-function pointLamp(x,y,z){const l=new THREE.PointLight('#ffc878',0,6,1.6);l.position.set(x,y,z);add(l);lamps.push(l);}
+const glowMat=new THREE.MeshBasicMaterial({color:'#ffd27a',transparent:true,opacity:.92,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4});
+const glows=[],lampSpots=[],lampMats=[];
+function glowAt(x,y,z,w,h){const g=new THREE.Mesh(new THREE.PlaneGeometry(w,h),glowMat);g.position.set(x,y,z+.025);g.visible=false;add(g);glows.push(g);}
+/* lamps only record where light should be; a small pool of real lights moves to the ones nearest the player at night */
+function pointLamp(x,y,z){lampSpots.push({x,y,z,g:PARENT});}
 function house(o){
   const W=o.W||5,D=o.D||3,H=o.H||1.5,oh=.32,rh=o.rh||1.25,cx=o.cx,cz=o.cz,y=o.y;
   const wt=o.wall||T.wall;
@@ -58,3 +62,25 @@ function fenceRect(x0,x1,z0,z1,gap){ /* gap: {side:'w'|'e', z0, z1} */
 }
 function hills(list){const cols=['#6f9a52','#86a85a','#5d8a4a','#9aa860','#7a9c56'];list.forEach((h,i)=>{const m=mesh(new THREE.IcosahedronGeometry(1,0),M({color:cols[i%5],flatShading:true}),h[0],h[1],h[2]);m.scale.set(h[3],h[4],h[5]);m.rotation.y=rnd()*3;m.castShadow=false;});}
 function rocksAt(list){list.forEach(r=>{const m=mesh(new THREE.DodecahedronGeometry(r[3]||(.32+rnd()*.2),0),rockMat,r[0],r[1]+.12,r[2]);m.rotation.set(rnd()*3,rnd()*3,0);});}
+
+/* tall buildings fade out while they stand between the camera and the player */
+const FADES=[];
+function fadeGroup(r,h,fn){
+  const n0=PARENT.children.length;fn();
+  const mats=[];
+  PARENT.children.slice(n0).forEach(o=>o.traverse(m=>{
+    if(!m.isMesh||m.material===glowMat)return;
+    const one=x=>{const c=x.clone();if(lampMats.indexOf(x)>=0)lampMats.push(c);mats.push(c);return c;};
+    m.material=Array.isArray(m.material)?m.material.map(one):one(m.material);
+  }));
+  FADES.push({x0:r.x0,x1:r.x1,z0:r.z0,z1:r.z1,h,mats,g:PARENT,o:1});
+}
+function updateFades(px,py,pz,instant){
+  FADES.forEach(f=>{
+    if(f.g!==L.group)return;
+    const zn=Math.max(f.z0,pz);
+    const occ=px>f.x0-.5&&px<f.x1+.5&&f.z1>pz+.3&&py+.9+(zn-pz)*1.43<f.h;
+    const goal=occ?.28:1;f.o=instant?goal:f.o+(goal-f.o)*.15;
+    const see=f.o<.98;f.mats.forEach(m=>{m.transparent=see;m.opacity=see?f.o:1;m.depthWrite=!see;});
+  });
+}

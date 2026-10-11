@@ -21,77 +21,110 @@ function makeStorm(intensity){
   };
 }
 
+/* a saltwater crocodile that cruises slowly back and forth */
+function croc(x,z,len){
+  const g=new THREE.Group();g.position.set(x,-.2,z);add(g);const s=len||1;
+  const skin=mc('#3a4a2a'),belly=mc('#6a7a4a');
+  mesh(new THREE.BoxGeometry(1.1*s,.14,.36*s),skin,0,0,0,g);
+  mesh(new THREE.BoxGeometry(.5*s,.1,.2*s),skin,.75*s,0,0,g);
+  mesh(new THREE.BoxGeometry(.7*s,.08,.14*s),skin,-.85*s,0,0,g);
+  for(let i=0;i<5;i++)mesh(new THREE.BoxGeometry(.08,.06,.08),belly,-.4*s+i*.2*s,.09,0,g);
+  [-.08,.08].forEach(zz=>{mesh(new THREE.BoxGeometry(.1,.1,.08),skin,.55*s,.08,zz*s,g);mesh(new THREE.BoxGeometry(.04,.04,.03),mc('#f0d040'),.57*s,.12,zz*s+(zz>0?.04:-.04),g);});
+  g.userData={x,z,ph:rnd()*6};return g;
+}
+
 /* ================= Stormhaven ================= */
-const SH=newLoc('stormhaven',{name:'Stormhaven',sub:'Top End · Gym 3 · Electric',yaw:0,grid:Grid(34,22,-17,-11),
-  mood:{day:['#4a5a78','#9aa8bc','#8a96a8',.65,.85],gold:['#6a4a5a','#c89878','#9a7a70',.75,.85]},
+const SH=newLoc('stormhaven',{name:'Stormhaven',sub:'Top End · Gym 3 · Electric',yaw:0,
+  mood:{day:['#4a5a78','#9aa8bc','#8a96a8',.65,.85],gold:['#8a4a6a','#f0a070','#c8806a',.85,.9]},
   wild:{day:['Tadbolt','Gigglet','Sugrette','Croakbolt','Scarabolt'],night:['Possnack','Tadbolt','Hootlet'],field:'spear grass'}});
 (function(L){
-  PARENT=L.group;const g=L.grid;
-  groundBox(-44,44,-32,4,-.6,0,T.grass);
-  groundBox(-44,44,4,40,-.9,-.5,T.mud,T.mud);
-  const wCreek=waterPlane(-44,44,4,40,-.16,T.water,{opacity:.88,color:'#9ab4a0'});
-  slab(-44,44,-4,-2,0,.03,T.redEarth,'#8a4a2a');
-  slab(-12,-11,-2,3,0,.02,T.redEarth,'#8a4a2a');slab(-5,-4,-2,3,0,.02,T.redEarth,'#8a4a2a');
-  /* buildings */
-  const ar=rectOf(L,1,3,6,6);terminal(ar,0);slab(-28,-11,-13,-7,0,.03,T.tarmac,'#3a3e46');plane(-20,0,-10,0);
-  healingCentre(rectOf(L,9,3,13,6));
-  generalStore(rectOf(L,15,4,19,6),0,'#f0c030');
-  observatory(rectOf(L,22,2,28,6),0);
-  const st=(a,c,b,d,wall,line,roof)=>{const r=rectOf(L,a,c,b,d);qlder({cx:r.cx,cz:r.cz,W:r.W,D:r.D,wallTex:boards(wall,line),front:T.louvreFront,roof,lift:1.1,lattice:false,stump:'#5a5a5a'});};
-  st(3,11,7,13,'#e8e4d8','#c0bcae',T.roofTeal);st(10,11,14,13,'#f0e8d0','#d0c4a8',T.roofBlue);
-  /* spear grass, pylons, mangroves, crocs */
-  const grassTiles=[];for(let y=12;y<=14;y++)for(let x=18;x<=29;x++)grassTiles.push([x,y]);
-  grassTiles.forEach(p=>{const [x,z]=g.w(p[0],p[1]);for(let k=0;k<3;k++)spr(T.spear,x-.35+k*.35+(rnd()-.5)*.1,0,z+(rnd()-.5)*.6,.55,.85);});
-  [[20,10],[31,10],[31,4]].forEach(p=>{const [x,z]=g.w(p[0],p[1]);pylon(x,0,z,3.6);g.block(p[0],p[1]);L.talk.set(p[0]+','+p[1],['A lightning pylon. It hums and crackles every time the clouds roll in.']);});
-  for(let x=-17;x<=17;x+=1.3)spr(MANGROVE,x+(rnd()-.5)*.5,-.2,4.3+rnd()*.6,2,2.3,0,true);
-  for(let i=0;i<30;i++)spr(MANGROVE,(rnd()*2-1)*30,-.2,6+rnd()*14,2.2,2.6,0,true);
-  const crocs=[];
-  [[-6,7.5],[5,9]].forEach(c=>{const grp=new THREE.Group();grp.position.set(c[0],-.2,c[1]);add(grp);
-    mesh(new THREE.BoxGeometry(.9,.12,.32),mc('#3a4a2a'),0,0,0,grp);
-    [-.08,.08].forEach(z=>{mesh(new THREE.BoxGeometry(.12,.12,.1),mc('#3a4a2a'),-.35,.08,z,grp);mesh(new THREE.BoxGeometry(.04,.04,.03),mc('#f0d040'),-.35,.12,z+(z>0?.05:-.05),grp);});
-    grp.userData={x:c[0],z:c[1],ph:rnd()*6};crocs.push(grp);});
-  /* trees */
-  const tropic=[TREE.gum,TREE.olive,TREE.gum];
-  borderTrees(L,[0,1],[0,33],tropic,(tx,ty)=>ty>=14);
-  [[8,9],[16,9],[29,8]].forEach(p=>{const [x,z]=g.w(p[0],p[1]);palm(x,0,z,1,(rnd()-.5)*2);g.block(p[0],p[1]);L.talk.set(p[0]+','+p[1],['A palm tree, bent by a hundred wet-season storms.']);});
-  for(let i=0;i<60;i++){const X=(rnd()*2-1)*34,Z=-28+rnd()*16;if(Math.abs(X)<17.2&&Z>-11.4)continue;spr(rnd()<.5?TREE.olive:TREE.gum,X,0,Z,2.2,2.8,.6,true);}
-  hills([[-24,0,-26,8,3,6],[-8,0,-27,9,3.5,6],[10,0,-27,9,3,6],[26,0,-25,8,3,6]]);
-  [[7,9],[14,9],[21,9]].forEach(p=>tileLamp(L,p[0],p[1],'#3a3a44'));
-  tileSign(L,2,8,['STORMHAVEN','Lightning capital of Australis.']);
-  tileSign(L,16,14,['CROCODILE WARNING','Saltwater crocodiles live in this creek. Do not swim, paddle or stand at the edge.']);
-  tileSign(L,22,8,['STORMHAVEN GYM','Leader: Ray. "Ride the lightning!"']);
-  /* grid */
-  g.block(0,0,33,1);g.block(0,0,0,21);g.block(33,0,33,21);g.block(0,15,33,21);
-  g.block(1,3,6,6);g.block(9,3,13,6);g.block(15,4,19,6);g.block(22,2,28,6);g.block(3,11,7,13);g.block(10,11,14,13);
-  markRect(L.grass,18,12,29,14);
-  markRect(L.paved,0,7,33,8);markRect(L.paved,5,9,5,13);markRect(L.paved,12,9,12,13);
-  for(let x=0;x<34;x++)L.talk.set(x+',15',['Murky creek water. Something just slid under the surface...','Best keep well back from the edge.']);
-  door(L,3,6,{flight:true});door(L,4,6,{flight:true});
-  door(L,11,6,{say:['Stormhaven Healing Centre.','You rest for a moment. Your team feels refreshed!']});
-  door(L,17,6,{say:['Stormhaven General Store.','Raincoats, rubber boots, and spare batteries for your torch.']});
-  door(L,25,6,{to:'shgym',spawn:{tx:7,ty:14,face:[0,-1]}});
-  L.talk.set('5,13',['A stilt house with louvre windows. Up high, it catches every breeze and stays dry in the floods.']);
-  L.talk.set('12,13',['Someone\'s strung a hammock between the stilts underneath. Very relaxing.']);
-  L.airport={tx:4,ty:7,face:[0,1]};
-  npc(L,()=>human(CHAR.ranger),15,14,['Never swim in the creek, mate.','The salties are always watching, even when you can\'t see them.'],{rot:Math.PI});
-  npc(L,()=>human(CHAR.chaser),21,10,['Did you see that bolt?!','Ray says Stormhaven gets more lightning than anywhere else in Australis!']);
-  npc(L,()=>human(CHAR.auntie),9,9,['Wet season storms roll in every afternoon, love.','Best get under cover when the thunder starts.']);
-  npc(L,()=>human(CHAR.lineworker),30,10,['These pylons catch lightning and store it for the town.','Ray\'s gym runs on pure storm power!']);
-  L.spawn={tx:4,ty:7,face:[0,1]};
-  scatterTufts(L,90,T.tuft,.1);
+  const W=56,H=40,p=Plan(W,H,'.'),ter=p.ter,obj=p.obj;
+  /* clifftop town above a beach, with a mangrove creek cutting a gorge to the sea */
+  const cy=x=>21+1.5*Math.sin(x/7),sy=x=>31+1.5*Math.sin(x/5+1);
+  ter.each((x,y)=>y<=cy(x)?'^':y>sy(x)?'~':':');
+  ter.path([[10,0],[11,7],[9,14],[11,22],[10,27],[11,33]],4.4,'~');
+  /* the main road crosses the gorge on a high bridge */
+  ter.each((x,y,c)=>(y===8||y===9)?(c==='~'?'b':'!'):null);
+  ter.each((x,y,c)=>(y===7||y===10)&&c==='^'?'*':null);
+  /* stairs down the cliff, the beach market and the wharf */
+  const stairsAt=x=>{const c=Math.floor(cy(x));ter.set(x,c,'%');ter.set(x,c-1,'%');ter.set(x,c+1,'S');ter.set(x,c+2,':');return c;};
+  const s1=stairsAt(22),s2=stairsAt(38);
+  ter.path([[22,10],[22,s1]],1.2,'%');ter.path([[38,10],[38,s2]],1.2,'%');
+  ter.path([[44,24],[44,sy(44)+1],[44,36]],1.8,cur=>cur==='~'?'b':null);ter.rect(41,35,48,37,cur=>cur==='~'?'b':null);
+  /* airport, town and the headland observatory */
+  ter.rect(0,0,9,1,'!');ter.rect(1,6,8,7,'*');
+  ter.rect(43,10,51,16,'*');
+  p.build(1,2,7,5,(r,y)=>terminal(r,y));
+  p.build(14,3,18,6,(r,y)=>healingCentre(r,y));
+  p.build(21,4,25,6,(r,y)=>generalStore(r,y,'#f0c030'));
+  const st=(x0,y0,wall,line,roof)=>p.build(x0,y0,x0+4,y0+2,(r,y)=>qlder({cx:r.cx,cz:r.cz,y,W:r.W,D:r.D,wallTex:boards(wall,line),front:T.louvreFront,roof,lift:1.1,lattice:false,stump:'#5a5a5a'}));
+  st(28,4,'#e8e4d8','#c0bcae',T.roofTeal);st(34,4,'#f0e8d0','#d0c4a8',T.roofBlue);
+  st(15,12,'#e8f0e8','#c4d4c4',T.roofOrange);st(24,12,'#f4ece0','#d8ccb8',T.roofRed);
+  ter.rect(17,15,17,16,'%');ter.rect(26,15,26,16,'%');ter.path([[17,16],[26,16]],1,'%');ter.path([[22,10],[22,16]],1,'%');
+  p.build(44,10,50,14,(r,y)=>observatory(r,y));
+  /* spear grass on the clifftop, mangroves in the creek */
+  obj.ellipse(33,15,5,3,(c,x,y)=>c===' '&&ter.get(x,y)==='^'?'g':null,.4);
+  obj.ellipse(6,17,2.5,3,(c,x,y)=>c===' '&&ter.get(x,y)==='^'?'g':null,.3);
+  ter.each((x,y,c)=>{if(c==='~'&&x<16&&y<34&&obj.get(x,y)===' '&&(ter.get(x-1,y)!=='~'||ter.get(x+1,y)!=='~')&&rnd()<.7)obj.set(x,y,'m');return null;});
+  [[27,11],[41,11],[42,5],[20,18]].forEach(c=>obj.set(c[0],c[1],'X'));
+  [[18,25],[22,26],[26,25],[30,26],[34,25]].forEach(c=>obj.rect(c[0],c[1],c[0]+1,c[1],'X'));
+  obj.rect(46,36,47,37,'X');
+  p.border(2,'TOTO',".,^;");
+  p.sprinkle('TO',2,2,53,6,.12,'^');
+  p.sprinkle('P',2,11,53,20,.04,'^');p.sprinkle('P',14,22,55,30,.04,':');
+  [[6,7],[14,7],[19,7],[27,7],[33,7],[40,7],[48,7],[6,10],[27,10],[40,10],[52,10]].forEach(c=>obj.set(c[0],c[1],'L'));
+  [[47,19],[49,19]].forEach(c=>obj.set(c[0],c[1],'B'));
+  const SIGNS=[[9,6,['STORMHAVEN','Lightning capital of Australis.']],[15,10,['CROCODILE WARNING','Saltwater crocodiles live in this creek. Do not swim, paddle or stand at the edge.']],
+    [42,11,['STORMHAVEN GYM','Leader: Ray. "Ride the lightning!"']],[23,s1-1,['SUNSET MARKETS','Down the stairs. Every Thursday and Sunday, from 5pm till late.']],
+    [53,7,['EAST: Billabong Wetlands','Floodplains, paperbarks and a bird hide. Brolga dance in the wet season.']],[45,20,['SUNSET LOOKOUT','Best seat in Stormhaven for the evening storms.']]];
+  const PEOPLE=[[13,10,'ranger',['Never swim in the creek, mate.','The salties are always watching, even when you can\'t see them.'],Math.PI],
+    [30,10,'chaser',['Did you see that bolt?!','Ray says Stormhaven gets more lightning than anywhere else in Australis!']],
+    [26,27,'auntie',['Satay, mango, fresh lime! Come, come.','Watch the storm roll in over the water. Best show in town, love.']],
+    [41,12,'lineworker',['These pylons catch lightning and store it for the town.','Ray\'s gym runs on pure storm power!']],
+    [43,36,'fisher',['Barralet are biting off the wharf tonight.','Saw a boat out past the point with no lights on. Odd, that.'],-Math.PI/2],
+    [32,29,'kid',['The sand is still warm from the sun!','Mum says the crocs don\'t come up on this beach. Mostly.']],
+    [48,20,'elder',['When I was young, Stormhaven was just a pearling town.','Now the storms power everything. Even Ray\'s gym.']]];
+  SIGNS.concat(PEOPLE).forEach(a=>obj.set(a[0],a[1],' '));
+
+  const built=buildMap(L,p,{tex:{road:T.tarmac,plaza:T.pave,dirt:T.redEarth,sand:T.sand},bank:T.mud,cliff:T.redEarth,water:{color:'#9ac0b0',bedTex:T.mud,opacity:.88},
+    skirt:[TREE.gum,TREE.olive,T.palmSpr],tufts:140,tall:T.spear,lampCol:'#3a3a44',
+    waterTalk:['Murky green water. Something just slid under the surface...','Best keep well back from the edge.'],benchTalk:['You watch the clouds pile up over the sea. A low rumble of thunder rolls in.']});
+  const g=L.grid,wp=(x,y)=>g.w(x,y),Hc=g.h(30,5);
+  SIGNS.forEach(a=>tileSign(L,a[0],a[1],a[2]));
+  PEOPLE.forEach(a=>npc(L,()=>human(CHAR[a[2]]),a[0],a[1],a[3],a[4]?{rot:a[4]}:null));
+  /* pylons, market stalls and the wharf kiosk */
+  [[27,11],[41,11],[42,5],[20,18]].forEach(c=>{const [x,z]=wp(c[0],c[1]);pylon(x,g.h(c[0],c[1]),z,3.6);L.talk.set(c[0]+','+c[1],['A lightning pylon. It hums and crackles every time the clouds roll in.']);});
+  [[18,25,'#e05040'],[22,26,'#f0c030'],[26,25,'#2ea89a'],[30,26,'#8a5ab8'],[34,25,'#e09038']].forEach(s=>{const [x,z]=wp(s[0],s[1]);stall(x+.5,0,z,s[2]);talkRect(L,s[0],s[1],s[0]+1,s[1],['A market stall: '+['satay sticks on the grill','tropical fruit salad','crocodile-tooth necklaces (fake, the sign insists)','hand-dyed sarongs','lime and coconut ice'][[18,22,26,30,34].indexOf(s[0])]+'.']);});
+  {const [a,az]=wp(17,24),[b,bz]=wp(36,24);festoon(a,az,b,bz,2.4);}
+  {const [x,z]=wp(46,36);const k=new THREE.Group();k.position.set(x+.5,g.h(46,36),z+.5);add(k);
+    mesh(new THREE.BoxGeometry(1.8,1.2,1.6),mc('#f4f0e6'),0,.6,0,k);mesh(new THREE.BoxGeometry(2.1,.12,1.9),mc('#2e6aa8'),0,1.26,0,k);mesh(new THREE.BoxGeometry(1.2,.4,.04),mc('#f0c030'),0,1.5,.8,k);glowAt(x+.5,g.h(46,36)+.6,z+1.31,1.2,.5);
+    talkRect(L,46,36,47,37,['Fish and chips on the wharf. The smell of hot chips makes your stomach rumble.']);}
+  /* doors */
+  [3,4,5].forEach(x=>door(L,x,5,{flight:true}));
+  door(L,16,6,{say:['Stormhaven Healing Centre.','You rest for a moment. Your team feels refreshed!']});
+  door(L,23,6,{say:['Stormhaven General Store.','Raincoats, rubber boots, and spare batteries for your torch.']});
+  door(L,30,6,{say:['A stilt house with louvre windows. Up high, it catches every breeze and stays dry in the floods.']});
+  door(L,36,6,{say:['Someone\'s strung a hammock between the stilts underneath. Very relaxing.']});
+  door(L,17,14,{say:['A sign on the door: "Gone fishing. Back when the barra stop biting."']});
+  door(L,26,14,{say:['Through the louvres: a shelf of storm-chasing trophies and a very old Gigglet plush.']});
+  door(L,47,14,{to:'shgym',spawn:{tx:7,ty:14,face:[0,-1]}});
+  L.airport={tx:4,ty:6,face:[0,1]};
+  /* crocs in the creek and off the beach */
+  const crocs=[[10,13],[11,26],[10,31],[18,34]].map(c=>{const [x,z]=wp(c[0],c[1]);return croc(x,z,1.2);});
+  L.spawn={tx:4,ty:6,face:[0,1]};
+  L.exit=(tx,ty,dx)=>(tx>=W-1&&dx===1)?{to:'billabong',spawn:{tx:1,ty:ty<=8?16:17,face:[1,0]},card:['Billabong Wetlands','Top End floodplain']}:null;
   /* rain */
   const RN=320,rp=new Float32Array(RN*6),rs=[];
-  for(let i=0;i<RN;i++)rs.push([rnd()*36-18,rnd()*6,rnd()*26-13,.8+rnd()*.6]);
+  for(let i=0;i<RN;i++)rs.push([rnd()*36-18,rnd()*7,rnd()*26-13,.8+rnd()*.6]);
   const rgeo=new THREE.BufferGeometry();rgeo.setAttribute('position',new THREE.BufferAttribute(rp,3));
   const rain=add(new THREE.LineSegments(rgeo,new THREE.LineBasicMaterial({color:'#c8d8f0',transparent:true,opacity:.45})));rain.frustumCulled=false;
   const storm=makeStorm(1);
   L.update=(t,dt)=>{
-    wCreek.offset.set(t*.01,-t*.02);
-    crocs.forEach(c=>{const u=c.userData;c.position.x=u.x+Math.sin(t*.15+u.ph)*2;c.position.y=-.22+Math.sin(t*.8+u.ph)*.02;c.rotation.y=Math.cos(t*.15+u.ph)>0?0:Math.PI;});
+    if(built.water)built.water.offset.set(t*.01,-t*.02);
+    crocs.forEach(c=>{const u=c.userData;c.position.x=u.x+Math.sin(t*.15+u.ph)*1.2;c.position.y=-.22+Math.sin(t*.8+u.ph)*.02;c.rotation.y=Math.cos(t*.15+u.ph)>0?0:Math.PI;});
     orbs.forEach(o=>{if(o.parent===L.group||o.parent&&o.parent.parent===L.group)o.material.emissiveIntensity=1+Math.abs(Math.sin(t*7+o.position.x))*.9;});
-    palms.forEach(p=>{if(p.parent===L.group)p.userData.top.rotation.z=Math.sin(t*1.6+p.userData.ph)*.1;});
-    const tx=target.x,tz=target.z;
-    for(let i=0;i<RN;i++){const r=rs[i];const y=((r[1]-t*9*r[3])%6+6)%6;const x=tx+r[0],z=tz+r[2];rp[i*6]=x;rp[i*6+1]=y;rp[i*6+2]=z;rp[i*6+3]=x-.05;rp[i*6+4]=y+.45;rp[i*6+5]=z;}
+    const tx=target.x,tz=target.z,ty=target.y;
+    for(let i=0;i<RN;i++){const r=rs[i];const y=ty+((r[1]-t*9*r[3])%7+7)%7;const x=tx+r[0],z=tz+r[2];rp[i*6]=x;rp[i*6+1]=y;rp[i*6+2]=z;rp[i*6+3]=x-.05;rp[i*6+4]=y+.45;rp[i*6+5]=z;}
     rgeo.attributes.position.needsUpdate=true;
     storm(t,dt||.016);
   };
@@ -128,7 +161,7 @@ const SHG=newLoc('shgym',{name:'Stormhaven Gym',sub:'Storm Observatory · Electr
     battle:['Gym Leader Ray sent out Joltik!','Joltik used Thunder Wave! The air crackled with static!','Joltik fainted! Ray sent out Volglider!','Volglider fainted! Ray sent out Chucklebolt!','Chucklebolt laughed like rolling thunder and struck fast!','Your partner weathered the storm. Chucklebolt fainted!','Ray: "Now that\'s what I call riding the lightning!"','You received the Thunderhead Badge!','The next flight, to Redheart in the red desert, is coming soon.'],
     after:['Every storm passes eventually. That\'s what makes them worth chasing.','Redheart is out in the red desert. Ranger Dusty will be waiting.']});
   L.spawn={tx:7,ty:14,face:[0,-1]};
-  L.exit=(tx,ty,dx,dy)=>(ty>=14&&dy===1)?{to:'stormhaven',spawn:{tx:25,ty:7,face:[0,1]}}:null;
+  L.exit=(tx,ty,dx,dy)=>(ty>=14&&dy===1)?{to:'stormhaven',spawn:{tx:47,ty:15,face:[0,1]}}:null;
   const storm=makeStorm(.5);
   L.update=(t,dt)=>{
     tops.forEach((o,i)=>{o.material.emissiveIntensity=1+Math.abs(Math.sin(t*9+i))*1.2;});

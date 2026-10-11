@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Australis Starters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4efe4;--ink:#2a2620;--muted:#6e665a;--card:#fffaf0;--line:#e2d8c4;--grass:#4a9a48;--fire:#e0602a;--water:#2e7ac8;--shadow:0 2px 0 rgba(0,0,0,.06)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17191c;--ink:#efe9dc;--muted:#a49c8c;--card:#212428;--line:#33373c;--shadow:none}}
+:root[data-theme="dark"]{--bg:#17191c;--ink:#efe9dc;--muted:#a49c8c;--card:#212428;--line:#33373c;--shadow:none}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.5 Nunito,system-ui,sans-serif}
+#c{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+#stage,#err,#dialog{display:none}
+main{position:relative;max-width:1080px;margin:0 auto;padding:32px 16px 64px}
+header{margin-bottom:28px}
+h1{font:700 clamp(28px,5vw,44px)/1.1 'Space Mono',monospace;margin:0 0 8px}
+header p{margin:0;color:var(--muted);max-width:640px}
+header a{color:inherit}
+section{margin-top:34px}
+h2{font:800 20px/1.2 Nunito,sans-serif;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.tag{font:700 12px/1 'Space Mono',monospace;padding:5px 8px;border-radius:999px;color:#fff;letter-spacing:.02em}
+.grass{background:var(--grass)}.fire{background:var(--fire)}.water{background:var(--water)}.elec{background:#c8a010}.ground{background:#9a6a3a}.poison{background:#8a4ac0}
+.sub{color:var(--muted);margin:0 0 14px;font-size:15px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.view{height:230px;position:relative}
+.info{padding:12px 14px 14px;border-top:1px solid var(--line)}
+.name{font:700 18px/1.2 'Space Mono',monospace;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.dex{color:var(--muted);font-size:13px}
+.types{display:flex;gap:6px;margin:8px 0}
+.info p{margin:0;font-size:14.5px;color:var(--muted)}
+.arrow{position:absolute;right:-12px;top:50%;font:700 18px 'Space Mono';color:var(--muted);z-index:2}
+footer{margin-top:40px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<div id="stage"></div><div id="err"><p></p></div>
+<main>
+  <header>
+    <h1>Australis starters</h1>
+    <p>Three partners for the journey, each with a three-stage line and a Gen 4-style second type in its final form. Every model is built from simple low-poly shapes in code, the same as the trainers in the game. <a href="index.html">Play the game</a>.</p>
+  </header>
+  <div id="lines"></div>
+  <footer>Type triangle: Grass beats Water, Water beats Fire, Fire beats Grass. Your rival always picks the starter that beats yours. Your partner evolves after the Reef Badge.</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/textures.js"></script>
+<script src="js/builders.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/starters.js"></script>
+<script>
+/* gallery: one fixed canvas, each card's viewport drawn with a scissor so the page stays responsive */
+const LINES=[
+  {title:'Gumjo line',sub:'Koala · Grass, then Grass/Ground. Ability: Gum Bellow, a sound attack that can make foes flinch.',forms:['gumjo','bellowala','koalossus']},
+  {title:'Kindrill line',sub:'Frilled lizard · Fire, then Fire/Electric. Ability: Frill Flare, lowers the foe\'s Attack on entry.',forms:['kindrill','frillblaze','pyragon']},
+  {title:'Puggly line',sub:'Platypus · Water, then Water/Poison. Ability: Electrosense, its moves never miss.',forms:['puggly','spurbill','platyrant']}];
+const tcls={Grass:'grass',Fire:'fire',Water:'water',Electric:'elec',Ground:'ground',Poison:'poison'};
+const host=document.getElementById('lines'),views=[];
+LINES.forEach(l=>{
+  const s=document.createElement('section');const first=FORMS[l.forms[0]].type;
+  s.innerHTML='<h2>'+l.title+' <span class="tag '+tcls[first]+'">'+first+'</span></h2><p class="sub">'+l.sub+'</p>';
+  const row=document.createElement('div');row.className='row';
+  l.forms.forEach((k,i)=>{const f=FORMS[k];const c=document.createElement('article');c.className='card';
+    c.innerHTML='<div class="view" role="img" aria-label="3D model of '+f.name+'"></div><div class="info"><div class="name"><span>'+f.name+'</span><span class="dex">#'+f.dex+'</span></div><div class="types">'+f.type.split('/').map(t=>'<span class="tag '+tcls[t]+'">'+t+'</span>').join('')+'</div><p>'+f.blurb+'</p></div>';
+    row.appendChild(c);
+    const sc=new THREE.Scene();
+    sc.add(new THREE.HemisphereLight('#cfe6ff','#6a6a48',.55));const d=new THREE.DirectionalLight('#fff0d8',1.05);d.position.set(3,5,4);sc.add(d);const bk=new THREE.DirectionalLight('#a8c8ff',.35);bk.position.set(-4,3,-3);sc.add(bk);
+    const m=f.build();m.ph=i;sc.add(m.group);
+    const box=new THREE.Box3().setFromObject(m.group),size=box.getSize(new THREE.Vector3()),ctr=box.getCenter(new THREE.Vector3());
+    const disc=new THREE.Mesh(new THREE.CircleGeometry(Math.max(size.x,size.z)*.62,32),new THREE.MeshBasicMaterial({color:'#000000',transparent:true,opacity:.14}));disc.rotation.x=-Math.PI/2;disc.position.y=.005;sc.add(disc);
+    const cam=new THREE.PerspectiveCamera(30,1,.05,50);const R=Math.max(size.x,size.y,size.z)*2.25+.4;
+    cam.position.set(R*.55,ctr.y+R*.32,R*.85);cam.lookAt(ctr.x,ctr.y,ctr.z);
+    views.push({el:c.querySelector('.view'),sc,cam,m});
+  });
+  s.appendChild(row);host.appendChild(s);
+});
+renderer.toneMappingExposure=.9;renderer.shadowMap.enabled=false;
+function resizeAll(){const w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==Math.floor(w*renderer.getPixelRatio())||canvas.height!==Math.floor(h*renderer.getPixelRatio()))renderer.setSize(w,h,false);}
+const clk=new THREE.Clock();
+function draw(){
+  resizeAll();const t=still?0:clk.getElapsedTime();
+  renderer.setScissorTest(false);renderer.setClearColor(0x000000,0);renderer.clear();renderer.setScissorTest(true);
+  const H=canvas.clientHeight;
+  views.forEach((v,i)=>{const r=v.el.getBoundingClientRect();if(r.bottom<0||r.top>H||r.right<0||r.left>canvas.clientWidth)return;
+    v.m.group.rotation.y=Math.sin(t*.5+i)*.7+(still?.5:0);v.m.root.position.y=Math.abs(Math.sin(t*1.8+i))*.03;animMon(v.m,t,false);
+    v.cam.aspect=r.width/r.height;v.cam.updateProjectionMatrix();
+    const y=H-r.bottom;renderer.setViewport(r.left,y,r.width,r.height);renderer.setScissor(r.left,y,r.width,r.height);renderer.render(v.sc,v.cam);});
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

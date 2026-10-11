@@ -99,7 +99,7 @@ function interact(){
   if(dlg){advance();return;}
   if(P.moving)return;
   const fx=P.tx+P.face[0],fy=P.ty+P.face[1],key=fx+','+fy;
-  if(follower.active&&follower.tx===fx&&follower.ty===fy){say(['Sugrette: "Sug-sug!"','Its fur crackles with happy static.']);return;}
+  if(follower.active&&follower.tx===fx&&follower.ty===fy){const f=FORMS[STATE.partner];const team=STATE.team.length>1?['Your team: '+STATE.team.map(k=>FORMS[k].name).join(', ')+'.']:[];say([f.name+': "'+f.cry+'"',f.name+' is the '+f.type+'-type Pokémon. '+f.blurb].concat(team));return;}
   const dr=L.doors.get(key);if(dr&&dr.flight){openFlights();return;}
   let t=L.talk.get(key);if(!t)return;
   if(typeof t==='function')t=t();
@@ -131,7 +131,7 @@ function switchLoc(id,spawn){
 /* ================= lighting ================= */
 const hemi=new THREE.HemisphereLight('#d4ecff','#7a9a50',.7);scene.add(hemi);
 const sun=new THREE.DirectionalLight('#fff1d6',1.25);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
-Object.assign(sun.shadow.camera,{left:-26,right:26,top:26,bottom:-26,near:1,far:90});sun.shadow.bias=-.0006;sun.shadow.normalBias=.02;
+Object.assign(sun.shadow.camera,{left:-26,right:26,top:26,bottom:-26,near:1,far:90});sun.shadow.bias=-.0005;sun.shadow.normalBias=.045;
 scene.add(sun);scene.add(sun.target);
 const PN=90,pPos=new Float32Array(PN*3),pSeed=[];
 for(let i=0;i<PN;i++){pPos[i*3]=-14+rnd()*28;pPos[i*3+1]=.6+rnd()*3;pPos[i*3+2]=-10+rnd()*20;pSeed.push(rnd()*10);}
@@ -141,7 +141,7 @@ const motes=new THREE.Points(pGeo,ptMat);scene.add(motes);
 const PRESETS={
   day:{top:'#8fd0ff',bot:'#eaf6ff',fog:'#d6ecf7',hs:'#cfe6ff',hg:'#6a8a48',hi:.5,sun:'#fff0d8',si:1.0,sp:[-11,20,13],tint:'#eeeeee',glow:false,pc:'#fff3a0',po:.75,exp:.88},
   gold:{top:'#f0a06a',bot:'#ffe0ac',fog:'#f4cf9e',hs:'#ffd6a0',hg:'#6a5a40',hi:.45,sun:'#ffad6a',si:1.3,sp:[-21,7.5,7],tint:'#f0d4b8',glow:false,pc:'#ffe08a',po:.9,exp:.88},
-  night:{top:'#0b1430',bot:'#2a3c6e',fog:'#1e2c52',hs:'#5a6ab0',hg:'#1a1c28',hi:.5,sun:'#a8bcff',si:.55,sp:[9,16,6],tint:'#7d8cc4',glow:true,pc:'#d8ff7a',po:1,exp:1.1}
+  night:{top:'#0b1430',bot:'#22325e',fog:'#131c38',hs:'#3e4e98',hg:'#0c0e18',hi:.34,sun:'#7e96f0',si:.22,sp:[9,16,6],tint:'#4e5a92',glow:true,pc:'#d8ff7a',po:1,exp:.86}
 };
 function setTime(name){
   timeName=name;const p=PRESETS[name];
@@ -152,10 +152,19 @@ function setTime(name){
   scene.fog.color.set(fog);hemi.color.set(p.hs);hemi.groundColor.set(p.hg);hemi.intensity=hi;hemi.userData.base=hi;
   sun.color.set(p.sun);sun.intensity=si;sun.userData.off=p.sp;
   spriteMats.forEach(m=>m.color.set(tint));
-  glows.forEach(g=>g.visible=glow);lamps.forEach(l=>l.intensity=glow?1.4:0);lampMats.forEach(m=>m.emissiveIntensity=glow?1.6:0);
+  glows.forEach(g=>g.visible=glow);lampsOn=glow;updateLampPool();lampMats.forEach(m=>m.emissiveIntensity=glow?1.6:0);
   ptMat.color.set(p.pc);ptMat.opacity=L.indoor?0:p.po;ptMat.size=glow?.13:.09;blobMat.opacity=glow?.16:.24;
   renderer.toneMappingExposure=p.exp;
   document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.t===name)));
+}
+
+/* night lights: six real point lights follow the player between the town's lamp spots */
+const LAMP_POOL=[];for(let i=0;i<6;i++){const l=new THREE.PointLight('#ffb860',0,5,2);scene.add(l);LAMP_POOL.push(l);}
+let lampsOn=false;
+function updateLampPool(){
+  const spots=lampsOn?lampSpots.filter(s=>s.g===L.group||(s.g.parent===L.group)):[];
+  spots.sort((a,b)=>((a.x-target.x)**2+(a.z-target.z)**2)-((b.x-target.x)**2+(b.z-target.z)**2));
+  LAMP_POOL.forEach((l,i)=>{const s=spots[i];if(s){l.position.set(s.x,s.y,s.z);l.intensity=1.2;}else l.intensity=0;});
 }
 
 /* ================= camera & input ================= */
@@ -213,7 +222,7 @@ new ResizeObserver(()=>{resize();const d=defaultDist();if(d!==band){band=d;view.
 /* ================= start ================= */
 WT.group.visible=true;placePlayer(WT.spawn);target.set(P.to.x,P.to.y,P.to.z);
 resize();resetView();setTime('day');updateBadges();
-const clock=new THREE.Clock();let last=0;
+const clock=new THREE.Clock();let last=0,lampTick=0;
 function frame(){
   const now=clock.getElapsedTime(),dt=Math.min(.05,now-last);last=now;const t=still?0:now;
   if(!dlg&&!menu&&!busy&&!P.moving&&held.length)tryStep(held[held.length-1]);
@@ -226,16 +235,19 @@ function frame(){
   playerSprite.position.set(px,py,pz);playerBlob.position.set(px,py+.02,pz);
   if(follower.active&&follower.from){
     const k=P.moving?P.t:1;const fx=follower.from.x+(follower.to.x-follower.from.x)*k,fz=follower.from.z+(follower.to.z-follower.from.z)*k,fy=follower.from.y+(follower.to.y-follower.from.y)*k;
-    const ddx=follower.to.x-follower.from.x,ddz=follower.to.z-follower.from.z;if(Math.abs(ddx)+Math.abs(ddz)>.01)turnTo(FM.group,Math.atan2(ddx,ddz),.3);
-    FM.group.position.set(fx,fy+Math.abs(Math.sin(t*6))*(P.moving?.12:.03),fz);followerBlob.position.set(fx,fy+.02,fz);
+    const FG=follower.model.group,ddx=follower.to.x-follower.from.x,ddz=follower.to.z-follower.from.z;if(Math.abs(ddx)+Math.abs(ddz)>.01)turnTo(FG,Math.atan2(ddx,ddz),.3);
+    animMon(follower.model,t,P.moving);
+    FG.position.set(fx,fy+Math.abs(Math.sin(t*6))*(P.moving?.12:.03),fz);followerBlob.position.set(fx,fy+.02,fz);
     if(!P.moving)follower.from=follower.to;
   }
   target.lerp(new THREE.Vector3(px,py,pz),still?1:.12);
+  updateFades(px,py,pz);
   if(L.update)L.update(t,dt);
   L.actors.forEach(m=>{if(!m.group.visible)return;turnTo(m.group,m.targetRot,.15);if(m.hop)m.group.position.y=m.base+Math.abs(Math.sin(t*2.6+m.ph))*.16;else if(m.legL)animHuman(m,t,false,0);});
   if(dlg&&dlg.chars<dlg.lines[dlg.i].length){dlg.chars+=dt*48;renderDlg();}
   for(let i=0;i<PN;i++){const s=pSeed[i];pPos[i*3]=target.x+((s*13.7+t*.05)%1-.5)*28+Math.sin(t*.4+s)*.3;pPos[i*3+1]=target.y+.6+((s*.37+t*.08)%1)*3;pPos[i*3+2]=target.z+((s*7.3)%1-.5)*20+Math.cos(t*.3+s)*.3;}
   pGeo.attributes.position.needsUpdate=true;
+  if(now-lampTick>.25){lampTick=now;updateLampPool();}
   updateCamera();renderer.render(scene,camera);requestAnimationFrame(frame);
 }
 frame();

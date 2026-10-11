@@ -14,6 +14,6 @@ renderer.toneMappingExposure=1.05;renderer.setClearColor(0x000000,0);
 const still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scene=new THREE.Scene();
 scene.fog=new THREE.Fog(0xd6ecf7,34,90);
-const camera=new THREE.PerspectiveCamera(28,1,.5,220);
+const camera=new THREE.PerspectiveCamera(28,1,1.5,240);
 let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
 let PARENT=scene;const add=o=>{PARENT.add(o);return o;};

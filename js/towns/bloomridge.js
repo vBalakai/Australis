@@ -103,12 +103,12 @@ const BR=newLoc('bloom',{name:'Bloomridge',sub:'The Range · Garden town',yaw:0,
   grunt.onEnd=()=>{
     rescued=true;grunt.model.group.visible=false;grunt.model.blob.visible=false;g.open(18,11);L.talk.delete('18,11');
     caged.group.visible=false;
-    say(['The cage door swung open.','Sugrette glided out and landed on your shoulder. It wants to come with you!'],()=>{follower.active=true;follower.sprite.visible=true;follower.tx=18;follower.ty=11;placeFollower(true);});
+    say(['The cage door swung open.','Sugrette glided out and landed on your shoulder. It wants to come with you!'],()=>joinTeam('sugrette',18,11));
   };
   L.spawn={tx:1,ty:7,face:[1,0]};
   L.exit=(tx,ty,dx,dy)=>{
     if(tx<=0&&dx===-1)return {to:'wattle',spawn:{tx:30,ty:ty===7?11:12,face:[-1,0]},card:['Route 1','Downs farm roads']};
-    if(tx>=31&&dx===1)return {to:'riverbend',spawn:{tx:1,ty:ty===7?9:10,face:[1,0]},card:['Route 2','Valley farmland']};
+    if(tx>=31&&dx===1)return {to:'riverbend',spawn:{tx:1,ty:ty===7?19:20,face:[1,0]},card:['Route 2','Valley farmland']};
     return null;
   };
   scatterTufts(L,150,T.tuft,.22);

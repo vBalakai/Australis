@@ -183,3 +183,26 @@ function room(x0,x1,z0,z1,floorTex,wallTex,wallH){
   mesh(new THREE.BoxGeometry(.3,.8,z1-z0),sm,x1+.15,.4,(z0+z1)/2);
   slab(x0-60,x1+60,z0-40,z1+40,-.6,.02,T.concrete,'#101014').material[2].color.set('#0c0c12');
 }
+
+/* ---- shared town helpers ---- */
+function boards(base,line){return canvasTex(16,16,f=>{f(base,0,0,16,16);[3,7,11,15].forEach(y=>f(line,0,y,16,1));});}
+function healingCentre(r,y){house({cx:r.cx,cz:r.cz,y:y||0,W:r.W,D:r.D,H:2.2,rh:1.2,roof:T.roofTeal,front:T.centreFront,wall:T.labwall,chimney:false});glowAt(r.cx,(y||0)+.47,r.z1+.01,1.25,.94);}
+function generalStore(r,y,awningCol){
+  y=y||0;house({cx:r.cx,cz:r.cz,y,W:r.W,D:r.D,H:1.7,rh:1,roof:T.roofGreen,front:T.storeFront,chimney:false});
+  const aw=mesh(new THREE.BoxGeometry(r.W,.05,.8),[mc(awningCol||'#e05040'),mc(awningCol||'#e05040'),M({map:rep(T.awning,r.W,1)}),mc('#a83028'),M({map:rep(T.awning,r.W,.1)}),mc('#e05040')],r.cx,y+1.25,r.z1+.32);aw.rotation.x=.38;
+  [[-1.9,'#e09038'],[-1.4,'#58a840'],[1.4,'#e05040'],[1.9,'#f0d048']].forEach(c=>{mesh(new THREE.BoxGeometry(.42,.3,.36),mc('#b07c48'),r.cx+c[0],y+.15,r.z1+.3);mesh(new THREE.BoxGeometry(.36,.06,.3),mc(c[1]),r.cx+c[0],y+.33,r.z1+.3);});
+  glowAt(r.cx-1.56,y+.63,r.z1+.01,1,.5);glowAt(r.cx+1.56,y+.63,r.z1+.01,1,.5);
+}
+function borderTrees(L,rows,cols,kinds,skip,yOf){
+  const g=L.grid;const pick=()=>kinds[Math.floor(rnd()*kinds.length)];
+  rows.forEach(ty=>{for(let tx=0;tx<g.W;tx+=1.15){if(skip&&skip(Math.round(tx),ty))continue;const [x,z]=g.w(tx,ty);spr(pick(),x+(rnd()-.5)*.4,yOf?yOf(x,z):0,z+(rnd()-.5)*.3,2*(.92+rnd()*.25),2.5*(.92+rnd()*.25),.55,true);}});
+  cols.forEach(tx=>{for(let ty=0;ty<g.H;ty+=1.1){if(skip&&skip(tx,Math.round(ty)))continue;const [x,z]=g.w(tx,ty);spr(pick(),x+(rnd()-.5)*.3,yOf?yOf(x,z):0,z+(rnd()-.5)*.3,2*(.95+rnd()*.2),2.5*(.95+rnd()*.2),.55,true);}});
+}
+function tileTree(L,tex,tx,ty,s){const [x,z]=L.grid.w(tx,ty);spr(tex,x,L.grid.h(tx,ty),z,2*(s||1),2.5*(s||1),.6*(s||1),true);L.grid.block(tx,ty);}
+function tileSign(L,tx,ty,lines){const [x,z]=L.grid.w(tx,ty);signAt(x,L.grid.h(tx,ty),z);L.grid.block(tx,ty);L.talk.set(tx+','+ty,lines);}
+function tileLamp(L,tx,ty,col){const [x,z]=L.grid.w(tx,ty);streetLamp(x,L.grid.h(tx,ty),z,col);L.grid.block(tx,ty);L.talk.set(tx+','+ty,['A street lamp. Moths love it at night.']);}
+function waterPlane(x0,x1,z0,z1,y,tex,opts){
+  opts=opts||{};const t=rep(tex,x1-x0,z1-z0);
+  const m=add(new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,z1-z0),M({map:t,roughness:.3,transparent:true,opacity:opts.opacity||.9,color:opts.color||'#ffffff'})));
+  m.rotation.x=-Math.PI/2;m.position.set((x0+x1)/2,y,(z0+z1)/2);m.receiveShadow=true;return t;
+}

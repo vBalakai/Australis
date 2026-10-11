@@ -38,7 +38,7 @@ function markRect(set,x0,y0,x1,y1){for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++
 
 /* ---- locations, story state, doors, flights and gyms ---- */
 const LOCS={};
-const STATE={badges:new Set(),visited:new Set(['wattle'])};
+const STATE={badges:new Set(),visited:new Set(['wattle']),starter:null,partner:null,team:[]};
 const BADGES={jacaranda:'Jacaranda Badge',reef:'Reef Badge',thunder:'Thunderhead Badge'};
 function newLoc(id,o){const L=Object.assign({id,actors:[],talk:new Map(),grass:new Set(),paved:new Set(),doors:new Map(),group:new THREE.Group(),update:null},o);L.group.visible=false;scene.add(L.group);LOCS[id]=L;return L;}
 /* tile rectangle (inclusive) to world box */
@@ -56,6 +56,7 @@ const AIRPORTS=[
 function gymLeader(L,build,tx,ty,o){
   const n=npc(L,build,tx,ty,null);
   n.lines=()=>STATE.badges.has(o.badge)?o.after:o.intro;
-  n.onEnd=()=>{if(STATE.badges.has(o.badge))return;flashScreen();say(o.battle,()=>earnBadge(o.badge));};
+  /* battle lines name your partner; the Reef Badge is when your starter evolves */
+  n.onEnd=()=>{if(STATE.badges.has(o.badge))return;flashScreen();say(o.battle.map(l=>l.replace(/\b[Yy]our partner\b/g,partnerName())),()=>{earnBadge(o.badge);if(o.badge==='reef')evolvePartner();});};
   return n;
 }
