@@ -34,5 +34,28 @@ function npc(L,build,tx,ty,lines,opt){
   return n;
 }
 function talkRect(L,x0,y0,x1,y1,lines){for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)L.talk.set(x+','+y,lines);}
-function newLoc(id,o){const L=Object.assign({id,actors:[],talk:new Map(),grass:new Set(),paved:new Set(),group:new THREE.Group(),update:null},o);L.group.visible=false;scene.add(L.group);return L;}
 function markRect(set,x0,y0,x1,y1){for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)set.add(x+','+y);}
+
+/* ---- locations, story state, doors, flights and gyms ---- */
+const LOCS={};
+const STATE={badges:new Set(),visited:new Set(['wattle'])};
+const BADGES={jacaranda:'Jacaranda Badge',reef:'Reef Badge',thunder:'Thunderhead Badge'};
+function newLoc(id,o){const L=Object.assign({id,actors:[],talk:new Map(),grass:new Set(),paved:new Set(),doors:new Map(),group:new THREE.Group(),update:null},o);L.group.visible=false;scene.add(L.group);LOCS[id]=L;return L;}
+/* tile rectangle (inclusive) to world box */
+function rectOf(L,a,c,b,d){const g=L.grid;return {x0:a+g.ox,x1:b+1+g.ox,z0:c+g.oz,z1:d+1+g.oz,cx:(a+b+1)/2+g.ox,cz:(c+d+1)/2+g.oz,W:b-a+1,D:d-c+1};}
+/* walking into a door tile sends the player somewhere: {to, spawn, card?} or {flight:true} */
+function door(L,tx,ty,spec){L.doors.set(tx+','+ty,spec);}
+/* Australis Air: each airport town, in route order, and the badge its flight needs */
+const AIRPORTS=[
+  {id:'riverbend',name:'Riverbend City',needs:null},
+  {id:'coralport',name:'Coralport',needs:'jacaranda'},
+  {id:'stormhaven',name:'Stormhaven',needs:'reef'},
+  {id:'redheart',name:'Redheart',needs:'thunder',soon:true}
+];
+/* a gym leader: intro lines, then a short battle scene that awards the badge */
+function gymLeader(L,build,tx,ty,o){
+  const n=npc(L,build,tx,ty,null);
+  n.lines=()=>STATE.badges.has(o.badge)?o.after:o.intro;
+  n.onEnd=()=>{if(STATE.badges.has(o.badge))return;flashScreen();say(o.battle,()=>earnBadge(o.badge));};
+  return n;
+}

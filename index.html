@@ -9,7 +9,7 @@
 </head>
 <body>
 <div id="stage">
-  <canvas id="c" tabindex="0" aria-label="Walkable 3D diorama. Use the arrow keys or WASD to walk and Space to talk."></canvas>
+  <canvas id="c" tabindex="0" aria-label="Walkable 3D diorama. Use the arrow keys or WASD to walk, hold Shift to run, and press Space to talk."></canvas>
   <div class="tilt top" aria-hidden="true"></div>
   <div class="tilt bot" aria-hidden="true"></div>
   <div class="top">
@@ -21,8 +21,10 @@
         <button type="button" id="t-night" data-t="night" aria-pressed="false">Night</button>
       </div>
       <button type="button" id="tilt" class="tbtn" aria-pressed="true">Tilt-shift</button>
+      <span class="chip" id="badges">Badges 0/8</span>
     </div>
   </div>
+  <div class="menu" id="menu" role="listbox" aria-label="Choose" hidden></div>
   <div class="dialog" id="dialog" hidden><p id="dtext" aria-hidden="true"></p><span class="more" id="dmore" aria-hidden="true"></span></div>
   <p class="sr" id="live" aria-live="polite"></p>
   <div class="controls">
@@ -32,8 +34,11 @@
       <button type="button" class="r" id="pad-right" data-d="right" aria-label="Walk right"><svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M12 8 0 16V0z" fill="currentColor"/></svg></button>
       <button type="button" class="d" id="pad-down" data-d="down" aria-label="Walk down"><svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M8 12 0 0h16z" fill="currentColor"/></svg></button>
     </div>
-    <p class="keys">Arrows or WASD to walk · Space to talk</p>
-    <button type="button" class="abtn" id="btnA" aria-label="Talk or interact">A</button>
+    <p class="keys">Arrows or WASD to walk · hold Shift to run · Space to talk</p>
+    <div class="ab">
+      <button type="button" class="bbtn" id="btnB" aria-label="Hold to run">B</button>
+      <button type="button" class="abtn" id="btnA" aria-label="Talk or interact">A</button>
+    </div>
   </div>
   <div id="fade" aria-hidden="true"><div class="card"><strong id="cardName">Route 1</strong><span id="cardSub">Downs farm roads</span></div></div>
   <div id="flash" aria-hidden="true"></div>
@@ -48,6 +53,10 @@
 <script src="js/world.js"></script>
 <script src="js/towns/wattle-town.js"></script>
 <script src="js/towns/bloomridge.js"></script>
+<script src="js/props.js"></script>
+<script src="js/towns/riverbend.js"></script>
+<script src="js/towns/coralport.js"></script>
+<script src="js/towns/stormhaven.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>

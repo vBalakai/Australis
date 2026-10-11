@@ -108,7 +108,7 @@ const BR=newLoc('bloom',{name:'Bloomridge',sub:'The Range · Garden town',yaw:0,
   L.spawn={tx:1,ty:7,face:[1,0]};
   L.exit=(tx,ty,dx,dy)=>{
     if(tx<=0&&dx===-1)return {to:'wattle',spawn:{tx:30,ty:ty===7?11:12,face:[-1,0]},card:['Route 1','Downs farm roads']};
-    if(tx>=31&&dx===1)return {say:['Route 2 winds down through the valley to Riverbend City.','This part of Australis hasn\'t been built yet!']};
+    if(tx>=31&&dx===1)return {to:'riverbend',spawn:{tx:1,ty:ty===7?9:10,face:[1,0]},card:['Route 2','Valley farmland']};
     return null;
   };
   scatterTufts(L,150,T.tuft,.22);
