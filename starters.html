@@ -70,7 +70,7 @@ LINES.forEach(l=>{
     c.innerHTML='<div class="view" role="img" aria-label="3D model of '+f.name+'"></div><div class="info"><div class="name"><span>'+f.name+'</span><span class="dex">#'+f.dex+'</span></div><div class="types">'+f.type.split('/').map(t=>'<span class="tag '+tcls[t]+'">'+t+'</span>').join('')+'</div><p>'+f.blurb+'</p></div>';
     row.appendChild(c);
     const sc=new THREE.Scene();
-    sc.add(new THREE.HemisphereLight('#cfe6ff','#6a6a48',.55));const d=new THREE.DirectionalLight('#fff0d8',1.05);d.position.set(3,5,4);sc.add(d);const bk=new THREE.DirectionalLight('#a8c8ff',.35);bk.position.set(-4,3,-3);sc.add(bk);
+    sc.add(new THREE.HemisphereLight('#e8f2ff','#8a8a70',.62));const d=new THREE.DirectionalLight('#fff4e4',.72);d.position.set(3,5,4);sc.add(d);const bk=new THREE.DirectionalLight('#a8c8ff',.35);bk.position.set(-4,3,-3);sc.add(bk);
     const m=f.build();m.ph=i;sc.add(m.group);
     const box=new THREE.Box3().setFromObject(m.group),size=box.getSize(new THREE.Vector3()),ctr=box.getCenter(new THREE.Vector3());
     const disc=new THREE.Mesh(new THREE.CircleGeometry(Math.max(size.x,size.z)*.62,32),new THREE.MeshBasicMaterial({color:'#000000',transparent:true,opacity:.14}));disc.rotation.x=-Math.PI/2;disc.position.y=.005;sc.add(disc);
@@ -80,7 +80,7 @@ LINES.forEach(l=>{
   });
   s.appendChild(row);host.appendChild(s);
 });
-renderer.toneMappingExposure=.9;renderer.shadowMap.enabled=false;
+renderer.outputEncoding=THREE.LinearEncoding;renderer.toneMapping=THREE.NoToneMapping;renderer.shadowMap.enabled=false;
 function resizeAll(){const w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==Math.floor(w*renderer.getPixelRatio())||canvas.height!==Math.floor(h*renderer.getPixelRatio()))renderer.setSize(w,h,false);}
 const clk=new THREE.Clock();
 function draw(){

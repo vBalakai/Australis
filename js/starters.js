@@ -107,42 +107,70 @@ function pyragon(){
 }
 
 /* ---- Water: the platypus line ---- */
+/* little glowing dots on the bill: electrosense */
+function freckles(parent,y,z,w,n,col,glow){for(let i=0;i<n;i++){const x=(i/(n-1)-.5)*w,zz=z+((i%2)?.03:-.02);ptE(G.ball(.016,0),col,glow,x,y,zz,parent);}}
 function puggly(){
   const m=mon(),r=m.root;
-  pt(G.ball(.2),'#7a4626',0,.2,0,r,1,.85,1.2);pt(G.ball(.13),'#c89a70',0,.16,.08,r,1,.8,1);
-  pt(G.ball(.12),'#4a6a8e',0,.2,.27,r,1.25,.38,1);
-  eyePair(r,.33,.17,.07,.04);
-  pt(G.box(.26,.04,.2),'#6a4228',0,.1,-.27,r);
-  [[-.15,.13],[.15,.13],[-.14,-.1],[.14,-.1]].forEach(p=>pt(G.box(.1,.03,.1),'#4a6a8e',p[0],.02,p[1],r));
-  ptE(G.cone(.04,.08,6),'#9ad8ff','#3a8ad0',0,.48,.02,r);pt(G.ball(.045),'#9ad8ff',0,.43,.02,r);
+  /* a round river-pebble baby: sage-teal body speckled like a creek stone */
+  pt(G.ball(.21),'#2f8a80',0,.21,0,r,1.05,.9,1.1);pt(G.ball(.15),'#f2f0d8',0,.17,.08,r,1,.8,1);
+  [[.13,.3,-.05],[-.1,.33,-.1],[.16,.18,-.12],[-.17,.2,.02],[.02,.38,-.14]].forEach(d=>pt(G.ball(.028,0),'#1e5a54',d[0],d[1],d[2],r));
+  /* soft pink bill with glowing freckles */
+  pt(G.ball(.12),'#f08a84',0,.22,.3,r,1.15,.34,1.45);
+  freckles(r,.262,.36,.14,5,'#c8f8ff','#30c8ff');
+  eyePair(r,.34,.17,.075,.045);
+  [-.1,.1].forEach(x=>pt(G.ball(.032,0),'#f07a90',x,.29,.18,r,1,.6,.3));
+  /* lily-pad tail with a tiny flower */
+  const tail=pt(G.cyl(.17,.17,.03,12),'#38a832',0,.08,-.3,r);tail.scale.z=.85;
+  pt(G.box(.03,.032,.12),'#2e7a30',0,.09,-.38,r);
+  pt(G.ball(.035,0),'#f6b8d0',.06,.12,-.28,r);pt(G.ball(.015,0),'#fff2a0',.06,.15,-.28,r);
+  [[-.14,.12],[.14,.12],[-.13,-.1],[.13,-.1]].forEach(p=>pt(G.box(.09,.03,.1),'#e8766e',p[0],.02,p[1],r));
   return m;
 }
 function spurbill(){
   const m=mon(),r=m.root;
-  pt(G.ball(.28),'#6a4022',0,.34,0,r,.9,.78,1.6);pt(G.ball(.18),'#b08860',0,.27,.15,r,1,.7,1.4);
-  pt(G.ball(.18),'#6a4022',0,.48,.42,r);
-  pt(G.ball(.14),'#3e5c80',0,.44,.68,r,1.2,.32,1.3);
-  [-.05,.05].forEach(x=>ptE(G.box(.015,.012,.24),'#a8e8ff','#4ac0ff',x,.49,.68,r));
-  eyePair(r,.55,.56,.09,.04);
-  for(let i=0;i<4;i++)pt(G.cone(.04,.1,4),'#4a3220',0,.58-i*.02,.2-i*.16,r);
-  pt(G.box(.36,.05,.32),'#4a3220',0,.22,-.52,r).rotation.x=-.2;
-  [[-.2,.3],[.2,.3]].forEach(p=>pt(G.box(.14,.04,.14),'#3e5c80',p[0],.04,p[1],r));
-  [[-.2,-.22],[.2,-.22]].forEach(p=>{pt(G.box(.14,.04,.14),'#3e5c80',p[0],.04,p[1],r);ptE(G.cone(.03,.1,4),'#c080e0','#8a3ac0',p[0]*1.3,.12,p[1],r).rotation.z=p[0]>0?-1.2:1.2;});
+  /* a sleek creek swimmer marked with swirling currents */
+  pt(G.ball(.28),'#22706a',0,.34,0,r,.92,.8,1.55);pt(G.ball(.19),'#eeeed6',0,.27,.16,r,1,.7,1.3);
+  [-1,1].forEach(sd=>{[0,1].forEach(k=>{const sw=pt(new THREE.TorusGeometry(.1-k*.035,.018,4,12,Math.PI*1.3),'#7ae8d8',sd*.255,.36+k*.02,-.08+k*.12,r);sw.rotation.y=sd*Math.PI/2;sw.rotation.z=k*.8;});});
+  pt(G.ball(.18),'#22706a',0,.48,.42,r);
+  pt(G.ball(.14),'#e87a74',0,.45,.72,r,1.2,.3,1.6);
+  freckles(r,.48,.76,.18,6,'#c8f8ff','#30c8ff');
+  eyePair(r,.56,.57,.09,.042);
+  /* reed blades along the back */
+  [[.0,.56,.14,.22],[.0,.58,-.02,.28],[.0,.54,-.18,.22],[.0,.48,-.32,.16]].forEach((b,i)=>{const bl=pt(G.box(.04,b[3],.08),i%2?'#7ab838':'#4e8a2a',b[0],b[1]+b[3]*.3,b[2]-b[3]*.25,r);bl.rotation.x=-.95;});
+  /* paddle tail fringed like a leaf */
+  const tl=pt(G.box(.36,.05,.36),'#185a56',0,.2,-.55,r);tl.rotation.x=-.18;
+  [-.13,0,.13].forEach(x=>pt(G.cone(.05,.12,4),'#185a56',x,.18,-.76,r).rotation.x=-Math.PI/2);
+  [[-.2,.3],[.2,.3],[-.2,-.22],[.2,-.22]].forEach(p=>pt(G.box(.14,.04,.14),'#d86a64',p[0],.04,p[1],r));
+  [-.2,.2].forEach(x=>pt(G.cone(.025,.09,4),'#f0e4c8',x*1.3,.12,-.22,r).rotation.z=x>0?-1.2:1.2);
   return m;
 }
 function platyrant(){
   const m=mon(),r=m.root;
-  pt(G.ball(.5),'#4a2c1c',0,.78,0,r,1,1.08,1.25);pt(G.ball(.34),'#8a6a4a',0,.72,.3,r,1,1.2,.7);
-  pt(G.ball(.3),'#4a2c1c',0,1.32,.28,r);
-  pt(G.ball(.26),'#3a4a5a',0,1.24,.68,r,1.35,.4,1.2);pt(G.box(.62,.04,.3),'#7a3ab0',0,1.2,.78,r);
-  eyePair(r,1.44,.52,.13,.05,'#d02030');
-  [-.15,.15].forEach((x,i)=>{const b=pt(G.box(.15,.04,.03),'#2a1a14',x,1.53,.5,r);b.rotation.z=i?-.35:.35;});
-  /* venom: purple spines down the back and big glowing spurs */
-  for(let i=0;i<6;i++)ptE(G.cone(.07,.24-i*.02,4),'#9a4ad8','#6a1aa8',0,1.48-i*.12,.02-i*.17,r).rotation.x=-.5;
-  [-.42,.42].forEach(x=>{pt(G.cyl(.14,.16,.5,6),'#4a2c1c',x,.26,-.08,r);pt(G.box(.3,.06,.36),'#3a4a5a',x,.03,.0,r);m['spur'+(x>0?'R':'L')]=ptE(G.cone(.07,.3,5),'#c070f0','#8a2ad8',x*1.28,.42,-.12,r);m['spur'+(x>0?'R':'L')].rotation.z=x>0?-1.3:1.3;});
-  [-.5,.5].forEach(x=>{pt(G.cyl(.1,.12,.5,6),'#4a2c1c',x,.9,.3,r).rotation.x=.6;pt(G.box(.22,.05,.2),'#3a4a5a',x,.72,.52,r);});
-  pt(G.box(.7,.08,.6),'#3a2418',0,.3,-.78,r).rotation.x=-.25;
-  [-.18,.18].forEach(x=>pt(G.box(.08,.085,.4),'#7a3ab0',x,.31,-.8,r).rotation.x=-.25);
+  /* a hunched billabong guardian with a stone-plated, mossy back */
+  const B='#1f4e4a',D='#163a38';
+  pt(G.ball(.52),B,0,.76,0,r,1.1,.92,1.25);pt(G.ball(.32),'#e6e4cc',0,.64,.36,r,1,1.1,.6);
+  [[0,1.16,-.05,.25],[-.33,1.04,-.2,.2],[.33,1.04,-.2,.2],[-.18,1.06,-.48,.19],[.2,1.04,-.5,.19],[0,.92,-.72,.17],[-.44,.86,.16,.16],[.44,.86,.16,.16]].forEach(p=>{
+    const st=pt(G.ball(p[3],0),'#8a8e7c',p[0],p[1],p[2],r,1.1,.6,1.1);st.rotation.y=p[0]*3;
+    pt(G.ball(p[3]*.6,0),'#3e9a2e',p[0]+.03,p[1]+p[3]*.38,p[2]-.02,r,1,.5,1);});
+  pt(G.ball(.3),B,0,1.12,.5,r);
+  /* broad bill like a river stone, freckled with cave-glow */
+  pt(G.ball(.26),'#28302e',0,1.02,.92,r,1.35,.36,1.45);
+  freckles(r,1.08,1.02,.36,7,'#b8fbff','#20c8ff');
+  eyePair(r,1.25,.76,.13,.05,'#f0a818');
+  [-.15,.15].forEach((x,i)=>{const b2=pt(G.box(.16,.05,.04),'#0e1e1c',x,1.35,.73,r);b2.rotation.z=i?-.32:.32;});
+  /* bowed forearms, knuckles on the ground */
+  [-1,1].forEach(sd=>{const x=sd*.5;
+    const up=pt(G.cyl(.13,.11,.42,6),B,x+sd*.08,.58,.42,r);up.rotation.z=-sd*.45;
+    const lo=pt(G.cyl(.11,.13,.36,6),B,x+sd*.12,.24,.52,r);lo.rotation.z=sd*.25;
+    pt(G.box(.28,.12,.26),D,x+sd*.1,.06,.6,r);
+    [-.08,0,.08].forEach(d=>pt(G.cone(.032,.12,4),'#d8dccc',x+sd*.1+d,.06,.76,r).rotation.x=Math.PI/2);});
+  /* squat haunches with venom spurs that glow like Glimmet */
+  [-1,1].forEach(sd=>{const x=sd*.42;
+    pt(G.ball(.24),B,x,.32,-.3,r,1,1.1,1.2);pt(G.box(.3,.08,.34),D,x,.04,-.2,r);
+    const sp=ptE(G.cone(.075,.34,5),'#c8fcff','#18d0ff',x+sd*.22,.3,-.36,r);sp.rotation.z=-sd*1.2;m['spur'+(sd>0?'R':'L')]=sp;});
+  /* big paddle tail with a stone plate */
+  const tl=pt(G.box(.74,.09,.64),D,0,.26,-.9,r);tl.rotation.x=-.2;
+  pt(G.ball(.17,0),'#8a8e7c',0,.33,-.88,r,1.3,.4,1.2);
   return m;
 }
 
@@ -154,9 +182,9 @@ const FORMS={
   kindrill:{name:'Kindrill',dex:'004',type:'Fire',build:kindrill,cry:'Krrik!',next:'frillblaze',blurb:'A frilled-lizard hatchling. When it is startled its little frill flicks open and sparks fly from its tail.'},
   frillblaze:{name:'Frillblaze',dex:'005',type:'Fire',build:frillblaze,cry:'Frrrah!',next:'pyragon',blurb:'Sprints on two legs with its blazing frill spread wide. Frill Flare lowers a foe\'s Attack on sight.'},
   pyragon:{name:'Pyragon',dex:'006',type:'Fire/Electric',build:pyragon,cry:'GRRRAKK!',next:null,blurb:'A dragon lizard whose frill crackles with static, like the dry lightning that starts outback fires.'},
-  puggly:{name:'Puggly',dex:'007',type:'Water',build:puggly,cry:'Pug-pug!',next:'spurbill',blurb:'A baby platypus, or puggle. Its soft bill can feel the tiny sparks of prey hiding in creek mud.'},
-  spurbill:{name:'Spurbill',dex:'008',type:'Water',build:spurbill,cry:'Spurr!',next:'platyrant',blurb:'Hunts with its eyes shut, sensing prey through the stripes on its bill. Electrosense means it never misses.'},
-  platyrant:{name:'Platyrant',dex:'009',type:'Water/Poison',build:platyrant,cry:'PLAA-TYRR!',next:null,blurb:'A creek guardian armed with venomous ankle spurs. It rules its billabong and fears nothing.'},
+  puggly:{name:'Puggly',dex:'007',type:'Water',build:puggly,cry:'Pug-pug!',next:'spurbill',blurb:'A puggle as round and speckled as a creek pebble. Tiny glowing freckles on its bill feel the sparks of prey, and it steers with its lily-pad tail.'},
+  spurbill:{name:'Spurbill',dex:'008',type:'Water',build:spurbill,cry:'Spurr!',next:'platyrant',blurb:'Swirls of current run down its sides and reeds grow along its back. It hunts with its eyes shut, so Electrosense means it never misses.'},
+  platyrant:{name:'Platyrant',dex:'009',type:'Water/Poison',build:platyrant,cry:'PLAA-TYRR!',next:null,blurb:'A billabong guardian whose stone-plated back grows moss. Its venom spurs glow in the dark like Glimmet, warning poachers away.'},
   sugrette:{name:'Sugrette',dex:'018',type:'Electric/Fairy',build:sugrette,cry:'Sug-sug!',next:null,blurb:'A sugar glider that crackles with static when it is happy.'}
 };
 const STARTERS=['gumjo','kindrill','puggly'];
