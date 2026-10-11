@@ -27,7 +27,7 @@ The game runs in any modern browser. Open `index.html`, or turn on GitHub Pages 
 8. **Stormhaven** (Darwin): a clifftop town above a sunset beach market, with a high bridge over a crocodile creek, a wharf and storms. Ray's headland observatory awards the **Thunderhead Badge**.
 9. **Billabong Wetlands**: east of Stormhaven. A boardwalk across a billabong full of lily pads, a bird hide, dancing brolga and crocodiles.
 
-Gym battles are short story scenes for now, until a battle system is built. Switch between Day, Golden hour and Night at the top of the screen. See all nine starter designs on the [starter gallery](starters.html), and the polished cel-shaded battle models for the Puggly line on the [battle preview](battle.html).
+Gym battles are short story scenes for now, until a battle system is built. Switch between Day, Golden hour and Night at the top of the screen. See all nine starter designs on the [starter gallery](starters.html), and the pixel-art battle scenes for all nine on the [battle preview](battle.html).
 
 ## Art style
 
@@ -38,14 +38,14 @@ The towns are low-poly 3D scenes with pixel-art textures. Trainers, NPCs and Pok
 ```
 index.html                Page markup: the stage, location plate, dialogue box and controls
 starters.html             Gallery of the nine starter models
-battle.html               Battle-stage preview of the polished battle models
+battle.html               Pixel-art battle preview: battle models, fields, stats and signature moves
 css/style.css             Styles for the on-screen interface
 js/core.js                Renderer, scene, camera and shared setup
 js/textures.js            Pixel-art textures and sprites, drawn on canvases
 js/builders.js            Helpers for terrain, buildings, props, lamps, sprites and fading tall buildings
 js/characters.js          Low-poly models for trainers and NPCs
 js/starters.js            The nine starter models (overworld), your partner, evolution and your team
-js/battle-models.js       Polished cel-shaded battle models (the Puggly line so far)
+js/mon-designs.js         Starter designs, built as overworld models and detailed battle models
 js/world.js               Walkable grids, NPCs, talk spots, locations, badges, doors, flights and gym leaders
 js/props.js               Shared props: Queenslanders, palms, boats, towers, airports, gym buildings, interiors
 js/mapkit.js              The map kit: paint a map as characters and build soft-edged 3D ground from it

@@ -21,11 +21,14 @@ const MD=(function(){
 
   /* ---- kits ---- */
   function Kit(mode){
-    const hi=mode!=='world',facet=mode!=='smooth',mats=new Map();
+    /* modes: 'world' overworld model; 'pixel' detailed, lit like the overworld, for pixel-art battles; 'facet'/'smooth' cel-shaded */
+    const hi=mode!=='world',pix=mode==='pixel',facet=mode==='facet',flat=!hi,mats=new Map();
     const K={hi,mode,glows:[],blink:[]};
     K.mat=(c,glow)=>{const k=c+'|'+(glow||'');if(mats.has(k))return mats.get(k);
-      const m=hi?new THREE.MeshToonMaterial({color:c,gradientMap:grad,emissive:glow||'#000000',emissiveIntensity:glow?.9:0})
+      const m=!flat?new THREE.MeshToonMaterial({color:c,gradientMap:grad,emissive:glow||'#000000',emissiveIntensity:glow?.9:0})
                :new THREE.MeshStandardMaterial({color:c,flatShading:true,roughness:.85,metalness:0,emissive:glow||'#000000',emissiveIntensity:glow?.9:0});
+      /* pixel battles render in sRGB like the overworld, so convert the authored colours to keep them rich */
+      if(pix){m.color.convertSRGBToLinear();if(glow)m.emissive.convertSRGBToLinear();}
       mats.set(k,m);return m;};
     const fx=g=>(hi&&facet)?flatten(g):g;
     K.ball=r=>hi?(facet?flatten(new THREE.IcosahedronGeometry(r,2)):new THREE.SphereGeometry(r,28,20)):new THREE.IcosahedronGeometry(r,1);

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Australis Battle Models</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4efe4;--ink:#2a2620;--muted:#6e665a;--card:#fffaf0;--line:#e2d8c4;--accent:#2e7ac8;--hp:#3ac060;--atk:#e8703a;--def:#e0b030;--spa:#4a8ae0;--spd:#6ab04a;--spe:#d0508a}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17191c;--ink:#efe9dc;--muted:#a49c8c;--card:#212428;--line:#33373c}}
@@ -14,88 +14,127 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:600 16px/1.5 Nunito,system-ui,sans-serif}
 main{max-width:1060px;margin:0 auto;padding:24px 16px 48px}
 h1{font:700 clamp(24px,4.5vw,38px)/1.1 'Space Mono',monospace;margin:0 0 6px}
-.lede{color:var(--muted);margin:0 0 16px;max-width:680px}.lede a{color:inherit}
+.lede{color:var(--muted);margin:0 0 16px;max-width:700px}.lede a{color:inherit}
 .wrap{display:grid;grid-template-columns:1fr 280px;gap:14px}
 @media (max-width:860px){.wrap{grid-template-columns:1fr}}
-.stage{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/10;background:linear-gradient(#bfe6ff 0%,#e8f6ff 46%,#9fd880 46.2%,#6cbc58 100%)}
-.stage.night{background:linear-gradient(#1a2450 0%,#3a4a80 46%,#2a5a40 46.2%,#1c3a2c 100%)}
-#c{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hp{position:absolute;background:#fffaf0;border:3px solid #2a2620;border-radius:10px 10px 10px 2px;padding:5px 12px 7px;min-width:190px;color:#2a2620;box-shadow:4px 4px 0 rgba(0,0,0,.18)}
-.hp .n{font:700 14px/1.2 'Space Mono',monospace;display:flex;justify-content:space-between;gap:12px}
-.bar{height:8px;border-radius:4px;background:#d8d0bc;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;width:100%;background:#3ac060;transition:width .4s}
-.foe{left:3%;top:5%}.mine{right:3%;bottom:22%}
-.box{position:absolute;left:2%;right:2%;bottom:3%;background:#fffaf0;border:3px solid #2a2620;border-radius:12px;padding:8px 14px;color:#2a2620;font:700 clamp(13px,2.2vw,17px)/1.4 'Space Mono',monospace;min-height:15%}
+.stage{position:relative;border-radius:12px;overflow:hidden;border:4px solid #2a2620;aspect-ratio:4/3;background:#9fd0f0}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges}
+.px{font-family:'Press Start 2P',monospace;letter-spacing:0}
+.hp{position:absolute;background:#f8f8e8;border:3px solid #383838;border-radius:4px 14px 4px 4px;padding:6px 10px 7px;width:38%;color:#383838;box-shadow:inset -3px -3px 0 #c8c8b0}
+.hp .n{font-size:clamp(9px,1.6vw,12px);display:flex;justify-content:space-between;gap:10px}
+.bar{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:clamp(7px,1.2vw,9px);color:#e8a020}
+.bar .t{flex:1;height:7px;border:2px solid #383838;border-radius:3px;background:#505050;overflow:hidden}.bar i{display:block;height:100%;width:100%;background:#58d080;transition:width .4s}
+.foe{left:3%;top:4%}.mine{right:3%;bottom:28%}
+.box{position:absolute;left:0;right:0;bottom:0;background:#384868;border-top:4px solid #283048;padding:6px;min-height:24%}
+.box div{background:#f8f8f8;border:3px solid #a8a8b8;border-radius:6px;height:100%;min-height:calc(100% - 0px);padding:10px 12px;color:#383838;font-size:clamp(9px,1.8vw,13px);line-height:1.8}
 .side{display:flex;flex-direction:column;gap:12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
 .card h2{font:700 15px/1.2 'Space Mono',monospace;margin:0 0 4px;display:flex;justify-content:space-between;gap:8px}
-.role{font:700 11px/1 'Space Mono',monospace;padding:4px 7px;border-radius:999px;background:var(--accent);color:#fff}
+.role{font:700 11px/1 'Space Mono',monospace;padding:4px 7px;border-radius:999px;background:var(--accent);color:#fff;white-space:nowrap;align-self:flex-start}
 .card p{margin:4px 0 0;font-size:14px;color:var(--muted)}
 .stat{display:grid;grid-template-columns:52px 34px 1fr;align-items:center;gap:6px;font-size:13px;margin-top:5px}
 .stat b{font:700 12px 'Space Mono',monospace;text-align:right}
 .track{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.track i{display:block;height:100%;border-radius:4px;transition:width .35s}
 #ow{width:100%;aspect-ratio:1/1;display:block;border-radius:10px;background:linear-gradient(#e6f2e0,#cfe6c4)}
-.controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px;align-items:center}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px;align-items:center}
 .lbl{font:700 12px 'Space Mono',monospace;color:var(--muted);margin-right:2px}
 button{font:800 14px Nunito,sans-serif;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 button.go{background:#e05a3a;border-color:#e05a3a;color:#fff}
 button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.notes{color:var(--muted);font-size:14.5px;margin:6px 0 0}
+.notes{color:var(--muted);font-size:14.5px;margin:8px 0 0}
 </style>
 </head>
 <body>
 <main>
   <h1>Starter battle models</h1>
-  <p class="lede">Every starter has two models from the same design: a simple one that follows you in the overworld, and a detailed one for battle. Switch between a faceted, angular style and a smooth style, and try each line's signature move. <a href="starters.html">See all the overworld models</a>.</p>
+  <p class="lede">Battles now use the game's own look: pixel art drawn from low-poly 3D, lit like the overworld, on fields built from the same grass, sand and tree sprites as the towns. Each Pokémon is the same design as the model that follows you, with more detail. <a href="starters.html">See all the overworld models</a>.</p>
   <div class="controls" role="group" aria-label="Choose a line"><span class="lbl">Line</span><span id="lines"></span></div>
   <div class="controls" role="group" aria-label="Choose a stage"><span class="lbl">Stage</span><span id="stages"></span></div>
-  <div class="controls"><span class="lbl">Style</span><button data-m="facet" aria-pressed="true">Faceted</button><button data-m="smooth" aria-pressed="false">Smooth</button>
-    <span class="lbl" style="margin-left:8px">View</span><button id="spin" aria-pressed="false">Turntable</button><button id="night" aria-pressed="false">Night</button>
+  <div class="controls" role="group" aria-label="Choose a field"><span class="lbl">Field</span><span id="fields"></span></div>
+  <div class="controls"><span class="lbl">Look</span><button data-m="pixel" aria-pressed="true">Pixel art</button><button data-m="sharp" aria-pressed="false">Sharp</button>
+    <span class="lbl" style="margin-left:8px">Time</span><button id="night" aria-pressed="false">Night</button><button id="spin" aria-pressed="false">Turntable</button>
     <button class="go" id="atk">Use signature move</button></div>
   <div class="wrap">
     <div class="stage" id="stage">
       <canvas id="c" aria-label="Battle scene"></canvas>
-      <div class="hp foe"><div class="n"><span id="foeName"></span><span id="foeLv"></span></div><div class="bar"><i></i></div></div>
-      <div class="hp mine"><div class="n"><span id="myName"></span><span id="myLv"></span></div><div class="bar"><i id="myHp" style="width:86%"></i></div></div>
-      <div class="box" id="box" aria-live="polite"></div>
+      <div class="hp foe px"><div class="n"><span id="foeName"></span><span id="foeLv"></span></div><div class="bar"><span>HP</span><span class="t"><i></i></span></div></div>
+      <div class="hp mine px"><div class="n"><span id="myName"></span><span id="myLv"></span></div><div class="bar"><span>HP</span><span class="t"><i id="myHp" style="width:86%"></i></span></div></div>
+      <div class="box px"><div id="box" aria-live="polite"></div></div>
     </div>
     <div class="side">
       <div class="card"><h2><span id="lineName"></span><span class="role" id="role"></span></h2><p id="blurb"></p><div id="stats"></div></div>
       <div class="card"><h2><span>Overworld model</span></h2><canvas id="ow" aria-label="The simple overworld model that follows you"></canvas><p>The same design, simplified to follow you around the map.</p></div>
     </div>
   </div>
-  <p class="notes">The foe side shows the front of the model and your side shows its back, the way Pokémon battles frame them.</p>
+  <p class="notes">The foe faces you from the far platform and your partner shows its back, the way Pokémon battles frame them. Sharp turns the pixel effect off so you can see the models in full detail.</p>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/textures.js"></script>
+<script src="js/mapkit.js"></script>
 <script src="js/mon-designs.js"></script>
 <script>
 const NAMES={gumjo:'Gumjo',bellowala:'Bellowala',koalossus:'Koalossus',kindrill:'Kindrill',frillblaze:'Frillblaze',pyragon:'Pyragon',puggly:'Puggly',spurbill:'Spurbill',platyrant:'Platyrant'};
 const TYPES={gumjo:'Grass',bellowala:'Grass',koalossus:'Grass/Ground',kindrill:'Fire',frillblaze:'Fire',pyragon:'Fire/Electric',puggly:'Water',spurbill:'Water',platyrant:'Water/Poison'};
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-/* ---- battle scene ---- */
+/* ---- battle scene, rendered small and scaled up with crisp pixels, with the game's lighting ---- */
 const cv=document.getElementById('c'),stage=document.getElementById('stage');
-const R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));
-const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(30,16/10,.1,100);
-cam.position.set(-.5,1.85,4.6);cam.lookAt(.85,.8,-1.1);
-const hemi=new THREE.HemisphereLight('#f0f8ff','#7a9a60',.72);scene.add(hemi);
-const sun=new THREE.DirectionalLight('#fff4e0',.9);sun.position.set(3,6,5);scene.add(sun);
-const plat=(x,z,r)=>{const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
-  const top=new THREE.Mesh(new THREE.CylinderGeometry(r,r*1.02,.12,48),new THREE.MeshToonMaterial({color:'#c8e8a0'}));top.position.y=-.06;g.add(top);
-  const rim=new THREE.Mesh(new THREE.TorusGeometry(r*.98,.04,8,48),new THREE.MeshBasicMaterial({color:'#8ab870'}));rim.rotation.x=Math.PI/2;g.add(rim);return g;};
-const foeP=plat(1.45,-1.9,1.15),myP=plat(-.75,.05,1.05);
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:false,alpha:false});
+R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.9;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFShadowMap;
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(32,4/3,.1,120);
+cam.position.set(-.7,1.6,4.2);cam.lookAt(.8,.38,-1.5);
+const hemi=new THREE.HemisphereLight('#d4ecff','#6a8a48',.55);scene.add(hemi);
+const sun=new THREE.DirectionalLight('#fff0d8',1.05);sun.position.set(-4,7,5);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+Object.assign(sun.shadow.camera,{left:-5,right:5,top:5,bottom:-5,near:1,far:30});sun.shadow.bias=-.0008;sun.shadow.normalBias=.03;scene.add(sun);
+function skyTex(top,mid,bot){const c=document.createElement('canvas');c.width=2;c.height=64;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,64);gr.addColorStop(0,top);gr.addColorStop(.6,mid);gr.addColorStop(1,bot);g.fillStyle=gr;g.fillRect(0,0,2,64);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.magFilter=THREE.NearestFilter;return t;}
+const SKY={day:skyTex('#6ab8f0','#a8dcf8','#e8f6ff'),night:skyTex('#0a1430','#22325e','#3a4a7a')};
+scene.background=SKY.day;
+/* sprites from the towns: billboards that face the camera */
+const sprMats=new Map(),sprites=[];
+const pg=new THREE.PlaneGeometry(1,1);pg.translate(0,.5,0);
+function spr(tex,x,y,z,w,h,par){if(!sprMats.has(tex))sprMats.set(tex,new THREE.MeshLambertMaterial({map:tex,alphaTest:.5,side:THREE.DoubleSide}));
+  const m=new THREE.Mesh(pg,sprMats.get(tex));m.position.set(x,y,z);m.scale.set(w,h,1);m.rotation.y=Math.atan2(cam.position.x-x,cam.position.z-z)*.6;m.castShadow=true;
+  m.customDepthMaterial=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,map:tex,alphaTest:.5});(par||field).add(m);sprites.push(m);return m;}
+if(!T.sand)T.sand=canvasTex(16,16,f=>{f('#ecd9a4',0,0,16,16);f('#d8c48c',3,4);f('#d8c48c',11,9);f('#d8c48c',6,13);f('#f8ecc4',9,3);f('#f8ecc4',2,10);f('#f8ecc4',13,14);});
+const rep2=(t,x,y)=>{const n=t.clone();n.needsUpdate=true;n.repeat.set(x,y);n.wrapS=n.wrapT=THREE.RepeatWrapping;return n;};
+let field=new THREE.Group();scene.add(field);
+let rs=7;const rnd2=()=>{rs=(rs*16807)%2147483647;return (rs-1)/2147483646;};
+const FIELDS=[
+  {name:'Grass route',ground:()=>T.grass,pad:()=>T.path,build(){
+    for(let i=0;i<26;i++){const x=-9+i*.75+rnd2()*.4,z=-7.5-rnd2()*2.5;spr([TREE.gum,TREE.gum,TREE.olive,TREE.wattle][i%4],x,0,z,2.4,3.1);}
+    for(let i=0;i<14;i++){const x=-6+i*.95+rnd2()*.5,z=-5.2+rnd2()*.6;spr(TREE.gum,x,0,z,1.9,2.4);}
+    for(let i=0;i<40;i++){const x=-6+rnd2()*12,z=-4.6+rnd2()*7;if(Math.hypot(x-1.65,z+2.4)<1.5||Math.hypot(x+.7,z+.35)<1.4||z>.2)continue;spr(rnd2()<.6?T.tall:FLOWERS[i%5],x,0,z,rnd2()<.6?.7:.4,rnd2()<.6?.6:.4);}}},
+  {name:'Beach',ground:()=>T.sand,pad:()=>T.pave,build(){
+    const sea=new THREE.Mesh(new THREE.PlaneGeometry(60,14),new THREE.MeshLambertMaterial({map:rep2(T.water,40,9),color:'#c0f4f0'}));sea.rotation.x=-Math.PI/2;sea.position.set(0,.02,-11);field.add(sea);field.userData.sea=sea;
+    for(let i=0;i<9;i++){const x=-7+i*1.7+rnd2()*.6,z=-4.2-rnd2()*.8;spr(T.palmSpr,x,0,z,2.2,2.9);}
+    for(let i=0;i<30;i++){const x=-6+rnd2()*12,z=-3.6+rnd2()*6;if(Math.hypot(x-1.65,z+2.4)<1.5||Math.hypot(x+.7,z+.35)<1.4||z>.2)continue;spr(T.dune,x,0,z,.7,.55);}}},
+  {name:'Rainforest',ground:()=>T.lush,pad:()=>T.litter,build(){
+    for(let r=0;r<3;r++)for(let i=0;i<22;i++){const x=-9+i*.85+rnd2()*.4,z=-5.2-r*1.3-rnd2()*.5;spr(r===1&&i%5===2?TREE.fig:TREE.rain,x,0,z,r===1&&i%5===2?3.6:2.4,r===1&&i%5===2?4.2:3.1);}
+    for(let i=0;i<46;i++){const x=-6+rnd2()*12,z=-4.4+rnd2()*7;if(Math.hypot(x-1.65,z+2.4)<1.5||Math.hypot(x+.7,z+.35)<1.4||z>.2)continue;spr(T.fern,x,0,z,.75,.6);}}}];
+let fieldI=0;
+function buildField(){
+  scene.remove(field);field=new THREE.Group();scene.add(field);sprites.length=0;rs=7;
+  const F=FIELDS[fieldI];
+  const g=new THREE.Mesh(new THREE.PlaneGeometry(60,40),new THREE.MeshLambertMaterial({map:rep2(F.ground(),60,40)}));g.rotation.x=-Math.PI/2;g.receiveShadow=true;field.add(g);
+  [[1.65,-2.4,1.2],[-.7,-.35,1.15]].forEach(p=>{const pad=new THREE.Mesh(new THREE.CircleGeometry(p[2],28),new THREE.MeshLambertMaterial({map:rep2(F.pad(),p[2]*2,p[2]*2)}));pad.rotation.x=-Math.PI/2;pad.position.set(p[0],.012,p[1]);pad.scale.y=.62;pad.receiveShadow=true;field.add(pad);
+    const rim=new THREE.Mesh(new THREE.RingGeometry(p[2]*.96,p[2]*1.06,28),new THREE.MeshBasicMaterial({color:'#000000',transparent:true,opacity:.18}));rim.rotation.x=-Math.PI/2;rim.position.set(p[0],.014,p[1]);rim.scale.y=.62;field.add(rim);});
+  F.build();setNight(night);
+}
+const foeP=new THREE.Group(),myP=new THREE.Group();foeP.position.set(1.65,0,-2.4);myP.position.set(-.7,0,-.35);scene.add(foeP,myP);
 /* ---- overworld preview ---- */
-const ow=document.getElementById('ow'),R2=new THREE.WebGLRenderer({canvas:ow,antialias:true,alpha:true});R2.setPixelRatio(Math.min(devicePixelRatio||1,2));
+const ow=document.getElementById('ow'),R2=new THREE.WebGLRenderer({canvas:ow,antialias:true,alpha:true});R2.setPixelRatio(Math.min(devicePixelRatio||1,2));R2.outputEncoding=THREE.sRGBEncoding;R2.toneMapping=THREE.ACESFilmicToneMapping;R2.toneMappingExposure=.9;
 const scene2=new THREE.Scene(),cam2=new THREE.PerspectiveCamera(30,1,.05,40);
-scene2.add(new THREE.HemisphereLight('#f0f8ff','#7a9a60',.75));const s2=new THREE.DirectionalLight('#fff4e0',.85);s2.position.set(3,6,5);scene2.add(s2);
-let line=0,stg=0,mode='facet',spin=false,foe=null,mine=null,owm=null;
+scene2.add(new THREE.HemisphereLight('#d4ecff','#6a8a48',.6));const s2=new THREE.DirectionalLight('#fff0d8',1.05);s2.position.set(3,6,5);scene2.add(s2);
+let line=0,stg=0,look='pixel',spin=false,night=false,foe=null,mine=null,owm=null;
 const FX=[];
 function fit(rig,h){rig.group.scale.setScalar(1);const b=new THREE.Box3().setFromObject(rig.group),s=b.getSize(new THREE.Vector3());rig.group.scale.setScalar(h/Math.max(s.y,s.z*.75,s.x*.8));}
+function shadows(rig){rig.group.traverse(o=>{if(o.isMesh&&o.material&&o.material.type!=='MeshBasicMaterial'){o.castShadow=true;}});}
 function show(){
   const L=MD.LINES[line],f=L.forms[stg];
   [foe,mine,owm].forEach(m=>{if(m&&m.group.parent)m.group.parent.remove(m.group);});FX.splice(0).forEach(e=>e.kill&&e.kill());
-  foe=MD.build(f,mode);mine=MD.build(f,mode);mine.ph=1.3;
-  const big=[1.0,1.35,1.9][stg];fit(foe,big);fit(mine,big*.95);
-  foeP.add(foe.group);foe.group.rotation.y=-.62;myP.add(mine.group);mine.group.rotation.y=Math.PI-.75;
+  foe=MD.build(f,'pixel');mine=MD.build(f,'pixel');mine.ph=1.3;shadows(foe);shadows(mine);
+  const big=[.9,1.2,1.7][stg];fit(foe,big);fit(mine,big*.95);
+  foeP.add(foe.group);foe.group.rotation.y=-.6;myP.add(mine.group);mine.group.rotation.y=Math.PI-.75;
   owm=MD.build(f,'world');scene2.add(owm.group);
   const b=new THREE.Box3().setFromObject(owm.group),sz=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3()),D=Math.max(sz.x,sz.y,sz.z)*2.4+.3;
   cam2.position.set(D*.5,c.y+D*.42,D*.85);cam2.lookAt(c);
@@ -109,13 +148,15 @@ function show(){
 }
 function renderButtons(){
   const mk=(host,items,cur,fn)=>{host.textContent='';items.forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.setAttribute('aria-pressed',String(i===cur));b.addEventListener('click',()=>fn(i));host.appendChild(b);});};
-  mk(document.getElementById('lines'),MD.LINES.map(l=>l.name+' ('+l.role+')'),line,i=>{line=i;show();});
+  mk(document.getElementById('lines'),MD.LINES.map(l=>l.name+' ('+l.role+')'),line,i=>{line=i;stg=Math.min(stg,2);show();});
   mk(document.getElementById('stages'),MD.LINES[line].forms.map(f=>NAMES[f]),stg,i=>{stg=i;show();});
+  mk(document.getElementById('fields'),FIELDS.map(f=>f.name),fieldI,i=>{fieldI=i;buildField();renderButtons();});
 }
-document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));show();}));
-document.getElementById('spin').addEventListener('click',e=>{spin=!spin;e.currentTarget.setAttribute('aria-pressed',String(spin));if(!spin&&foe)foe.group.rotation.y=-.62;});
-document.getElementById('night').addEventListener('click',e=>{const on=!stage.classList.contains('night');stage.classList.toggle('night',on);e.currentTarget.setAttribute('aria-pressed',String(on));
-  hemi.intensity=on?.36:.72;hemi.color.set(on?'#8a9ae0':'#f0f8ff');sun.intensity=on?.42:.9;sun.color.set(on?'#9ab0ff':'#fff4e0');});
+function setNight(on){night=on;scene.background=on?SKY.night:SKY.day;hemi.intensity=on?.36:.55;hemi.color.set(on?'#4a5ca8':'#d4ecff');sun.intensity=on?.32:1.05;sun.color.set(on?'#8ea4ff':'#fff0d8');
+  sprMats.forEach(m=>m.color.set(on?'#6a78b8':'#ffffff'));R.toneMappingExposure=on?.95:.9;}
+document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{look=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));size();}));
+document.getElementById('spin').addEventListener('click',e=>{spin=!spin;e.currentTarget.setAttribute('aria-pressed',String(spin));if(!spin&&foe)foe.group.rotation.y=-.6;});
+document.getElementById('night').addEventListener('click',e=>{setNight(!night);e.currentTarget.setAttribute('aria-pressed',String(night));});
 
 /* ---- signature moves ---- */
 const V=()=>new THREE.Vector3();
@@ -167,13 +208,16 @@ document.getElementById('atk').addEventListener('click',()=>{
   else if(L.key==='dino'){box.textContent=N+' used Frill Flare!'+(foe.form==='pyragon'?' Lightning crackles across its frill!':'');frillFlare();}
   else {box.textContent=N+' used Bark Bulwark! Its Defense rose sharply!';barkBulwark();}
 });
-function size(){const w=stage.clientWidth,h=stage.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();const s=ow.clientWidth;R2.setSize(s,s,false);}
+function size(){const w=stage.clientWidth,h=stage.clientHeight;cam.aspect=w/h;cam.updateProjectionMatrix();
+  if(look==='pixel'){const H=200;R.setPixelRatio(1);R.setSize(Math.round(H*w/h),H,false);}else{R.setPixelRatio(Math.min(devicePixelRatio||1,2));R.setSize(w,h,false);}
+  const s=ow.clientWidth;R2.setSize(s,s,false);}
 new ResizeObserver(size).observe(stage);size();
 const clk=new THREE.Clock();let last=0;
-show();
+buildField();show();
 (function loop(){const now=clk.getElapsedTime(),dt=Math.min(.05,now-last);last=now;const t=still?0:now;
   if(foe){MD.animate(foe,t);if(spin&&!still)foe.group.rotation.y=t*.8;}
   if(mine)MD.animate(mine,t);if(owm){MD.animate(owm,t);owm.group.rotation.y=still?.5:t*.6;}
+  if(field.userData.sea)field.userData.sea.material.map.offset.set(t*.02,-t*.05);
   for(let i=FX.length-1;i>=0;i--){if(!FX[i].step(dt)){FX[i].kill&&FX[i].kill();FX.splice(i,1);}}
   R.render(scene,cam);R2.render(scene2,cam2);requestAnimationFrame(loop);})();
 </script>
