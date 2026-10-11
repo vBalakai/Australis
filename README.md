@@ -27,7 +27,7 @@ The game runs in any modern browser. Open `index.html`, or turn on GitHub Pages 
 8. **Stormhaven** (Darwin): a clifftop town above a sunset beach market, with a high bridge over a crocodile creek, a wharf and storms. Ray's headland observatory awards the **Thunderhead Badge**.
 9. **Billabong Wetlands**: east of Stormhaven. A boardwalk across a billabong full of lily pads, a bird hide, dancing brolga and crocodiles.
 
-Gym battles are short story scenes for now, until a battle system is built. Switch between Day, Golden hour and Night at the top of the screen. See all nine starter designs on the [starter gallery](starters.html), and the pixel-art battle scenes for all nine on the [battle preview](battle.html).
+Gym battles are short story scenes for now, until a battle system is built. Switch between Day, Golden hour and Night at the top of the screen. See all nine starter designs on the [starter gallery](starters.html), and their hand-shaded pixel-art battle sprites on the [battle preview](battle.html).
 
 ## Art style
 
@@ -38,7 +38,9 @@ The towns are low-poly 3D scenes with pixel-art textures. Trainers, NPCs and Pok
 ```
 index.html                Page markup: the stage, location plate, dialogue box and controls
 starters.html             Gallery of the nine starter models
-battle.html               Pixel-art battle preview: battle models, fields, stats and signature moves
+battle.html               Battle preview: pixel-art battle sprites on a 256x192 field, stats and signature moves
+assets/sprites/           Battle sprites (front and back for each starter) and their anchor points
+tools/sprites/            The Python tool that draws the battle sprites (run build.py to re-export)
 css/style.css             Styles for the on-screen interface
 js/core.js                Renderer, scene, camera and shared setup
 js/textures.js            Pixel-art textures and sprites, drawn on canvases
